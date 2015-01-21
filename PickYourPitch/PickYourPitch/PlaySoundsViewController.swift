@@ -32,6 +32,9 @@ class PlaySoundsViewController: UIViewController {
         audioEngine = AVAudioEngine()
         audioFile = AVAudioFile(forReading: receivedAudio.filePathUrl, error: nil)
         
+        // Retrieve the slider location
+        sliderView.value = NSUserDefaults.standardUserDefaults().floatForKey(SliderValueKey)
+        
         setUserInterfaceToPlayMode(false)
     }
     
@@ -50,7 +53,10 @@ class PlaySoundsViewController: UIViewController {
         playAudioWithVariablePitch(pitch)
         
         // Set the UI
-        setUserInterfaceToPlayMode(true)        
+        setUserInterfaceToPlayMode(true)
+        
+        // Save the slider location
+        NSUserDefaults.standardUserDefaults().setFloat(sliderView.value, forKey: SliderValueKey)
     }
     
     @IBAction func stopAudio(sender: UIButton) {

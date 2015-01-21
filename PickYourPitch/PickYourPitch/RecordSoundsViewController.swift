@@ -58,7 +58,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
 
         if flag {
             let url = recorder.url!
-            recordedAudio = RecordedAudio(filePathUrl: url, title: url.pathExtension)
+            recordedAudio = RecordedAudio(filePathUrl: url, title: url.path)
             self.performSegueWithIdentifier("stopRecording", sender: self)
         } else {
             println("Recording was not successful")
