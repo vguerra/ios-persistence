@@ -35,30 +35,34 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         recordingInProgress.hidden = false
         recordButton.enabled = false
         
-        // Build the audio file URL
-        let filename = "usersVoice.wav"
-        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-        let pathArray = [dirPath, filename]
-        let fileURL =  NSURL.fileURLWithPathComponents(pathArray)!
-        
         // Setup audio session
         var session = AVAudioSession.sharedInstance()
         session.setCategory(AVAudioSessionCategoryPlayAndRecord, error: nil)
 
         // Initialize and prepare the recorder
-        audioRecorder = AVAudioRecorder(URL: fileURL, settings: nil, error: nil)
+        audioRecorder = AVAudioRecorder(URL: audioFileURL(), settings: nil, error: nil)
         audioRecorder.delegate = self
         audioRecorder.meteringEnabled = true;
         audioRecorder.prepareToRecord()
 
         audioRecorder.record()
     }
+    
+    // Returns a URL to the audio file
+    func audioFileURL() ->  NSURL {
+        let filename = "usersVoice.wav"
+        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+        let pathArray = [dirPath, filename]
+        let fileURL =  NSURL.fileURLWithPathComponents(pathArray)!
+        
+        return fileURL
+    }
 
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder!, successfully flag: Bool) {
 
         if flag {
-            let url = recorder.url!
-            recordedAudio = RecordedAudio(filePathUrl: url, title: url.path)
+            let path = audioFileURL()
+            recordedAudio = RecordedAudio(filePathUrl: path, title: path.pathExtension)
             self.performSegueWithIdentifier("stopRecording", sender: self)
         } else {
             println("Recording was not successful")
