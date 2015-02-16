@@ -21,23 +21,12 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if NSFileManager.defaultManager().fileExistsAtPath(audioFileURL().path!) {
-            shouldSegueToSoundPlayer = true
-        }
     }
     
     override func viewWillAppear(animated: Bool) {
         //Hide the stop button
         stopButton.hidden = true
         recordButton.enabled = true
-        
-        // If the audio file was found in viewDidLoad, then segue to the sound player
-        if shouldSegueToSoundPlayer {
-            shouldSegueToSoundPlayer = false
-            recordedAudio = RecordedAudio(filePathUrl: audioFileURL(), title: audioFileURL().lastPathComponent)
-            self.performSegueWithIdentifier("stopRecording", sender: self)
-        }
     }
 
     @IBAction func recordAudio(sender: UIButton) {
@@ -50,8 +39,14 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         var session = AVAudioSession.sharedInstance()
         session.setCategory(AVAudioSessionCategoryPlayAndRecord, error: nil)
 
+        // Create a name for the file. This is the code that you are looking for
+        let filename = "usersVoice.wav"
+        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+        let pathArray = [dirPath, filename]
+        let fileURL =  NSURL.fileURLWithPathComponents(pathArray)!
+
         // Initialize and prepare the recorder
-        audioRecorder = AVAudioRecorder(URL: audioFileURL(), settings: nil, error: nil)
+        audioRecorder = AVAudioRecorder(URL: fileURL, settings: nil, error: nil)
         audioRecorder.delegate = self
         audioRecorder.meteringEnabled = true;
         audioRecorder.prepareToRecord()
@@ -59,21 +54,10 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         audioRecorder.record()
     }
     
-    // Returns a URL to the audio file
-    func audioFileURL() ->  NSURL {
-        let filename = "usersVoice.wav"
-        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-        let pathArray = [dirPath, filename]
-        let fileURL =  NSURL.fileURLWithPathComponents(pathArray)!
-        
-        return fileURL
-    }
-
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder!, successfully flag: Bool) {
 
         if flag {
-            let path = audioFileURL()
-            recordedAudio = RecordedAudio(filePathUrl: path, title: path.pathExtension)
+            recordedAudio = RecordedAudio(filePathUrl: recorder.url, title: recorder.url.pathExtension)
             self.performSegueWithIdentifier("stopRecording", sender: self)
         } else {
             println("Recording was not successful")
