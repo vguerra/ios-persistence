@@ -48,7 +48,9 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         audioRecorder.record()
     }
     
-    // Returns a URL to the audio file
+    // Returns a URL to the audio file.
+    // This is the code that was refactored out of the
+    // recordAudio() method in this step.
     func audioFileURL() ->  NSURL {
         let filename = "usersVoice.wav"
         let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
