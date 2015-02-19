@@ -51,7 +51,6 @@ class TheMovieDB : NSObject {
                 let newError = TheMovieDB.errorForData(data, response: response, error: error)
                 completionHandler(result: nil, error: downloadError)
             } else {
-                println("Step 3 - taskForResource's completionHandler is invoked.")
                 TheMovieDB.parseJSONWithCompletionHandler(data, completionHandler)
             }
         }
@@ -118,7 +117,6 @@ class TheMovieDB : NSObject {
         if let error = parsingError? {
             completionHandler(result: nil, error: error)
         } else {
-            println("Step 4 - parseJSONWithCompletionHandler is invoked.")
             completionHandler(result: parsedResult, error: nil)
         }
     }

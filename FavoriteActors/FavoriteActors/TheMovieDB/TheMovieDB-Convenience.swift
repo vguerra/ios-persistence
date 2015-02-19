@@ -69,8 +69,6 @@ extension TheMovieDB {
         
         var parameters = [Keys.ID : person.id]
         
-        println("Step 2 - The moviesForPerson convenience method invokes taskForResource creating URL: ")
-        
         taskForResource(Resources.PersonIDMovieCredits, parameters: parameters) {JSONResult, error in
             
             if let error = error? {
@@ -78,7 +76,6 @@ extension TheMovieDB {
             } else {
                 
                 if let results = JSONResult.valueForKey("cast") as? [[String : AnyObject]] {
-                    println("Step 5 - moviesForPerson's completion handler is invoked.")
                     
                     var movies = results.map() { (dictionary: [String : AnyObject]) -> Movie in
                         return Movie(dictionary: dictionary)
@@ -106,8 +103,6 @@ extension TheMovieDB {
         
         var parameters = [Keys.ID : movie.id]
         
-        println("Step 2 - The castForMovie convenience method invokes taskForResource creating URL: ")
-        
         taskForResource(Resources.MovieIDCredits, parameters: parameters) { JSONResult, error in
             
             if let error = error? {
@@ -115,7 +110,6 @@ extension TheMovieDB {
             } else {
                 
                 if let results = JSONResult.valueForKey("cast") as? [[String : AnyObject]] {
-                    println("Step 5 - castForMovie's completion handler is invoked.")
                     
                     let people = results.map() {Person(dictionary: $0)}
                     

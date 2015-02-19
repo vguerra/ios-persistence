@@ -10,6 +10,8 @@
 	<string>FavoriteActors</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>CD28FA6A2CFC634512324DD7C91B7993C5276BCE</key>
+		<string>http://github.com/udacity/ios-persistence</string>
 		<key>E0784410442D92876B37E886308284DFB9771023</key>
 		<string>http://github.com/udacity/ios-nanodegree</string>
 	</dict>
@@ -17,15 +19,17 @@
 	<string>FavoriteActors/FavoriteActors.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>E0784410442D92876B37E886308284DFB9771023</key>
+		<key>CD28FA6A2CFC634512324DD7C91B7993C5276BCE</key>
 		<string>../../..</string>
+		<key>E0784410442D92876B37E886308284DFB9771023</key>
+		<string>../../../../ios-nanodegree</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>http://github.com/udacity/ios-nanodegree</string>
+	<string>http://github.com/udacity/ios-persistence</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>E0784410442D92876B37E886308284DFB9771023</string>
+	<string>CD28FA6A2CFC634512324DD7C91B7993C5276BCE</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -35,6 +39,14 @@
 			<string>E0784410442D92876B37E886308284DFB9771023</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ios-nanodegree</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CD28FA6A2CFC634512324DD7C91B7993C5276BCE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ios-persistence</string>
 		</dict>
 	</array>
 </dict>
