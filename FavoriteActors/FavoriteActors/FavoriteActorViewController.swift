@@ -117,11 +117,10 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     
     // MARK: - Saving the array
     
-    var actorArrayURL: NSURL {
-        let filename = "favoriteActorsArray"
-        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL
-        
-        return documentsDirectoryURL.URLByAppendingPathComponent(filename)
+    var actorsFilePath : String {
+        let manager = NSFileManager.defaultManager()
+        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL
+        return url.URLByAppendingPathComponent("actorsArray").path!
     }
 }
 
