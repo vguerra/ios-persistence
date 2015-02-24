@@ -19,13 +19,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         super.viewDidLoad()
         
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addActor")
-        
-        // Try to get a reference to the context
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-        let context = appDelegate.managedObjectContext!
-        
-        println("context has changes to save: \(context.hasChanges)")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addActor")        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -33,8 +27,14 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         
         tableView.reloadData()
     }
-        
-
+    
+    // MARK: - Core Data Convenience
+    
+    var sharedContext: NSManagedObjectContext {
+        let delegate = UIApplication.sharedApplication().delegate as AppDelegate
+        return delegate.managedObjectContext!
+    }
+    
     // Mark: - Actions
     
     func addActor() {
