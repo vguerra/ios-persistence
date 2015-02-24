@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class FavoriteActorViewController : UITableViewController, ActorPickerViewControllerDelegate {
     
@@ -16,17 +17,23 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addActor")
-
-        // Unarchive the graph when the list is first shown
-        self.actors = NSKeyedUnarchiver.unarchiveObjectWithFile(actorsFilePath) as [Person]
+        
     }
     
     override func viewWillAppear(animated: Bool) {
-        // Archive the graph any time this list of actors is displayed.
-        NSKeyedArchiver.archiveRootObject(self.actors, toFile: actorsFilePath)
+        super.viewWillAppear(animated)
+        
+        tableView.reloadData()
+    }
+    
+    // MARK: - Core Data Convenience
+    
+    var sharedContext: NSManagedObjectContext {
+        let delegate = UIApplication.sharedApplication().delegate as AppDelegate
+        return delegate.managedObjectContext!
     }
     
     // Mark: - Actions
@@ -42,17 +49,27 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     // MARK: - Actor Picker Delegate
     
     func actorPicker(actorPicker: ActorPickerViewController, didPickActor actor: Person?) {
-
+        
         if let newActor = actor? {
             
-            // Check to see if we already have this actor
+            // Check to see if we already have this actor. If so, return.
             for a in actors {
                 if a.id == newActor.id {
                     return
                 }
             }
             
+            // The actor that was picked is from a different managed object context. We need to make
+            // a new actor. The easiest way to do that is to make a dictionary.
+            
+            let dictionary: [String : AnyObject] = [
+                Person.Keys.ID : newActor.id,
+                Person.Keys.Name : newActor.name,
+                Person.Keys.ProfilePath : newActor.imagePath
+            ]
+            
             // If we didn't find any, then add
+            let actorToBeAddedn = Person(dictionary: dictionary, context: sharedContext)
             self.actors.append(newActor)
         }
     }
@@ -78,9 +95,9 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         } else if actor.imagePath == "" {
             cell.actorImageView.image = UIImage(named: "personNoImage")
         }
-        
-        // If the above cases don't work, then we should download the image
-        
+            
+            // If the above cases don't work, then we should download the image
+            
         else {
             
             // Set the placeholder
@@ -88,7 +105,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             
             let size = TheMovieDB.sharedInstance().config.profileSizes[1]
             let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: actor.imagePath) { (imageData, error) -> Void in
-            
+                
                 if let data = imageData? {
                     dispatch_async(dispatch_get_main_queue()) {
                         let image = UIImage(data: data)
@@ -100,7 +117,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             
             cell.taskToCancelifCellIsReused = task
         }
-            
+        
         return cell
     }
     
@@ -123,12 +140,13 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         }
     }
     
-    // MARK: - Saving the array. Helper.
+    // MARK: - Saving the array
     
-    var actorsFilePath : String {
-        let manager = NSFileManager.defaultManager()
-        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL
-        return url.URLByAppendingPathComponent("actorsArray").path!
+    var actorArrayURL: NSURL {
+        let filename = "favoriteActorsArray"
+        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL
+        
+        return documentsDirectoryURL.URLByAppendingPathComponent(filename)
     }
 }
 

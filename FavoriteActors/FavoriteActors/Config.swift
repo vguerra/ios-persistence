@@ -9,12 +9,12 @@
 import Foundation
 
 /**
- * The config struct stores information that is used to build image
- * URL's for TheMovieDB. The constant values below were taken from 
- * the site on 1/23/15. Invoking the updateConfig convenience method
- * will download the latest using the failable initializer below to
- * parse the dictionary.
- */
+* The config struct stores information that is used to build image
+* URL's for TheMovieDB. The constant values below were taken from
+* the site on 1/23/15. Invoking the updateConfig convenience method
+* will download the latest using the failable initializer below to
+* parse the dictionary.
+*/
 
 // MARK: - Files Support
 private let _documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL
@@ -35,7 +35,7 @@ class Config: NSObject, NSCoding {
     }
     
     convenience init?(dictionary: [String : AnyObject]) {
-    
+        
         self.init()
         
         if let imageDictionary = dictionary[TheMovieDB.Keys.ConfigImages] as? [String : AnyObject] {
@@ -76,7 +76,7 @@ class Config: NSObject, NSCoding {
     }
     
     func updateIfDaysSinceUpdateExceeds(days: Int) {
-
+        
         // If the config is up to date then return
         if let daysSinceLastUpdate = daysSinceLastUpdate? {
             if (daysSinceLastUpdate <= days) {
@@ -85,7 +85,7 @@ class Config: NSObject, NSCoding {
         }
         
         // Otherwise, update
-        TheMovieDB.sharedInstance().updateConfig() { didSucceed, error in
+        TheMovieDB.sharedInstance().taskForUpdatingConfig() { didSucceed, error in
             
             if let error = error? {
                 println("Error updating config: \(error.localizedDescription)")

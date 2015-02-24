@@ -6,8 +6,15 @@
 //
 
 import UIKit
+import CoreData
 
-class Movie : NSObject, NSCoding {
+
+/**
+*   Notice that Movie is now a subclass of NSManagedObject.
+*   We will look at each change in this file in detail in Lesson 4.
+*/
+
+class Movie : NSManagedObject {
     
     struct Keys {
         static let Title = "title"
@@ -15,18 +22,24 @@ class Movie : NSObject, NSCoding {
         static let ReleaseDate = "release_date"
     }
     
-    var title = ""
-    var id = 0
-    var posterPath: String? = nil
-    var releaseDate: NSDate? = nil
+    @NSManaged var title: String
+    @NSManaged var id: Int
+    @NSManaged var posterPath: String
+    @NSManaged var releaseDate: NSDate
+    
+    init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
         
-    init(dictionary: [String : AnyObject]) {
+        // Core Data
+        let entity =  NSEntityDescription.entityForName("Person", inManagedObjectContext: context)!
+        super.init(entity: entity,insertIntoManagedObjectContext: context)
+        
+        // Dictionary
         title = dictionary[Keys.Title] as String
         id = dictionary[TheMovieDB.Keys.ID] as Int
-        posterPath = dictionary[Keys.PosterPath] as? String
+        posterPath = dictionary[Keys.PosterPath] as String
         
         if let releaseDateString = dictionary[Keys.ReleaseDate] as? String {
-            releaseDate = TheMovieDB.sharedDateFormatter.dateFromString(releaseDateString)
+            releaseDate = TheMovieDB.sharedDateFormatter.dateFromString(releaseDateString)!
         }
     }
     
@@ -37,25 +50,8 @@ class Movie : NSObject, NSCoding {
         }
         
         set {
-            TheMovieDB.Caches.imageCache.storeImage(newValue, withIdentifier: posterPath!)
+            TheMovieDB.Caches.imageCache.storeImage(newValue, withIdentifier: posterPath)
         }
-    }
-    
-    // MARK: - NSCoding
-    
-    func encodeWithCoder(archiver: NSCoder) {
-        
-        archiver.encodeObject(title, forKey: Keys.Title)
-        archiver.encodeObject(posterPath, forKey: Keys.PosterPath)
-        archiver.encodeObject(releaseDate, forKey: Keys.ReleaseDate)
-    }
-    
-    required init(coder unarchiver: NSCoder) {
-        super.init()
-        
-        title = unarchiver.decodeObjectForKey(Keys.Title) as String
-        posterPath = unarchiver.decodeObjectForKey(Keys.PosterPath) as? String
-        releaseDate = unarchiver.decodeObjectForKey(Keys.ReleaseDate) as? NSDate
     }
 }
 

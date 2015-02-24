@@ -17,9 +17,9 @@ class TheMovieDB : NSObject {
     
     override init() {
         session = NSURLSession.sharedSession()
-        super.init()        
+        super.init()
     }
-
+    
     
     // MARK: - All purpose task method for data
     
@@ -46,11 +46,12 @@ class TheMovieDB : NSObject {
         println(url)
         
         let task = session.dataTaskWithRequest(request) {data, response, downloadError in
-
+            
             if let error = downloadError? {
                 let newError = TheMovieDB.errorForData(data, response: response, error: error)
                 completionHandler(result: nil, error: downloadError)
             } else {
+                println("Step 3 - taskForResource's completionHandler is invoked.")
                 TheMovieDB.parseJSONWithCompletionHandler(data, completionHandler)
             }
         }
@@ -87,17 +88,40 @@ class TheMovieDB : NSObject {
         return task
     }
     
+    // MARK: - Update Config
+    
+    func taskForUpdatingConfig(completionHandler: (didSucceed: Bool, error: NSError?) -> Void) -> NSURLSessionTask {
+        
+        var parameters = [String: AnyObject]()
+        
+        let task = taskForResource(Resources.Config, parameters: parameters) { JSONResult, error in
+            
+            if let error = error? {
+                completionHandler(didSucceed: false, error: error)
+            } else if let newConfig = Config(dictionary: JSONResult as [String : AnyObject]) {
+                self.config = newConfig
+                completionHandler(didSucceed: true, error: nil)
+            } else {
+                completionHandler(didSucceed: false, error: NSError(domain: "Config", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse config"]))
+            }
+        }
+        
+        task.resume()
+        
+        return task
+    }
+    
     
     // MARK: - Helpers
     
     
     // Try to make a better error, based on the status_message from TheMovieDB. If we cant then return the previous error
-
+    
     class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
         
         if let parsedResult = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments, error: nil) as? [String : AnyObject] {
             if let errorMessage = parsedResult[TheMovieDB.Keys.ErrorStatusMessage] as? String {
-
+                
                 let userInfo = [NSLocalizedDescriptionKey : errorMessage]
                 
                 return NSError(domain: "TMDB Error", code: 1, userInfo: userInfo)
@@ -117,6 +141,7 @@ class TheMovieDB : NSObject {
         if let error = parsingError? {
             completionHandler(result: nil, error: error)
         } else {
+            println("Step 4 - parseJSONWithCompletionHandler is invoked.")
             completionHandler(result: parsedResult, error: nil)
         }
     }
@@ -126,7 +151,7 @@ class TheMovieDB : NSObject {
     class func escapedParameters(parameters: [String : AnyObject]) -> String {
         
         var urlVars = [String]()
-
+        
         for (key, value) in parameters {
             
             // make sure that it is a string value
@@ -178,9 +203,9 @@ class TheMovieDB : NSObject {
     }
     
     // MARK: - Shared Image Cache
-
+    
     struct Caches {
         static let imageCache = ImageCache()
     }
-
+    
 }
