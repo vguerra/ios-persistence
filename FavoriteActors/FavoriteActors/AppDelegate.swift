@@ -32,10 +32,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let fetchRequest = NSFetchRequest(entityName: "Person")
         let actorCount = context.executeFetchRequest(fetchRequest, error: nil)?.count ?? 0
         
+        var dictionary: [String : AnyObject]
+        var person: Person
+        
         if actorCount == 0 {
             
-            let kevinBaconDictionary = ["name" : "Kevin Bacon", "id" : 21305, "profile_path":"/p1uCaOjxSC1xS5TgmD4uloAkbLd.jpg"]
-            let kevinBacon = Person(dictionary: kevinBaconDictionary, context: context)
+            dictionary = ["name" : "LL Cool J", "id" : 36424, "profile_path":"/bPZmMROI8KXbZl3ljNRmkU6Tnb3.jpg"]
+            person = Person(dictionary: dictionary, context: context)
+            
+            dictionary = ["name" : "Ellen Page", "id" : 27578, "profile_path":"/vDunkYxyQPkzx9EwkfSZVCSzBlO.jpg"]
+            person = Person(dictionary: dictionary, context: context)
+            
+            dictionary = ["name" : "Bill Murray", "id" : 1532, "profile_path":"/eb58HuFIrxS0zUmbmW4d8YXTbje.jpg"]
+            person = Person(dictionary: dictionary, context: context)
+            
             
             context.save(&error)
             

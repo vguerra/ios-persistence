@@ -40,11 +40,12 @@ class MovieListViewController : UITableViewController {
                         
                         // Parse the array of movies dictionaries
                         var movies = moviesDictionaries.map() { (dictionary: [String : AnyObject]) -> Movie in
-                            return Movie(dictionary: dictionary, context: self.sharedContext)
+                            let movie = Movie(dictionary: dictionary, context: self.sharedContext)
+        
+                            movie.actor = self.actor
+                            
+                            return movie
                         }
-                        
-                        // Save the result
-                        self.actor.movies = movies
                         
                         // Update the table on the main thread
                         dispatch_async(dispatch_get_main_queue()) {

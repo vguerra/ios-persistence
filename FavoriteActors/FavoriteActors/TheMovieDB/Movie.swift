@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 
+@objc(Movie)
 
 /**
 *   Notice that Movie is now a subclass of NSManagedObject.
@@ -26,17 +27,18 @@ class Movie : NSManagedObject {
     @NSManaged var id: Int
     @NSManaged var posterPath: String
     @NSManaged var releaseDate: NSDate
+    @NSManaged var actor: Person
     
     init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
         
         // Core Data
-        let entity =  NSEntityDescription.entityForName("Person", inManagedObjectContext: context)!
-        super.init(entity: entity,insertIntoManagedObjectContext: context)
+        let entity =  NSEntityDescription.entityForName("Movie", inManagedObjectContext: context)!
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
         
         // Dictionary
         title = dictionary[Keys.Title] as String
         id = dictionary[TheMovieDB.Keys.ID] as Int
-        posterPath = dictionary[Keys.PosterPath] as String
+        posterPath = dictionary[Keys.PosterPath] as? String ?? ""
         
         if let releaseDateString = dictionary[Keys.ReleaseDate] as? String {
             releaseDate = TheMovieDB.sharedDateFormatter.dateFromString(releaseDateString)!
