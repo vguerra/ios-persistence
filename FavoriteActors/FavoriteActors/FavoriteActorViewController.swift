@@ -35,6 +35,15 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         return delegate.managedObjectContext!
     }
     
+    /**
+     * This is the convenience method for fetching all persistent actors. 
+     * Right now there are three actors pre-loaded into Core Data. Eventually
+     * Core Data will only store the actors that the users chooses.
+     *
+     * The method creates a "Fetch Request" and then executes the request on
+     * the shared context. 
+     */
+    
     func fetchAllActors() -> [Person] {
         let error: NSErrorPointer = nil
         
