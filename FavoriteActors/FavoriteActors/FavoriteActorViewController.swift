@@ -58,17 +58,6 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
                 }
             }
             
-            // The actor that was picked is from a different managed object context. We need to make
-            // a new actor. The easiest way to do that is to make a dictionary.
-            
-            let dictionary: [String : AnyObject] = [
-                Person.Keys.ID : newActor.id,
-                Person.Keys.Name : newActor.name,
-                Person.Keys.ProfilePath : newActor.imagePath
-            ]
-            
-            // If we didn't find any, then add
-            let actorToBeAddedn = Person(dictionary: dictionary, context: sharedContext)
             self.actors.append(newActor)
         }
     }
