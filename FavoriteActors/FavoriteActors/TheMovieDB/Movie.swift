@@ -29,6 +29,10 @@ class Movie : NSManagedObject {
     @NSManaged var releaseDate: NSDate
     @NSManaged var actor: Person
     
+    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    }
+    
     init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
         
         // Core Data
