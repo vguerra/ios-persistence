@@ -1,6 +1,6 @@
 //
 //  DetailViewController.swift
-//  MasterDetail-CoreData-1
+//  CoreDataMasterDetail
 //
 //  Created by Jason on 3/9/15.
 //  Copyright (c) 2015 Udacity. All rights reserved.
@@ -15,6 +15,7 @@ class DetailViewController: UIViewController {
 
     var detailItem: AnyObject? {
         didSet {
+            // Update the view.
             self.configureView()
         }
     }

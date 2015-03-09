@@ -1,6 +1,6 @@
 //
-//  MasterDetail_CoreData_1Tests.swift
-//  MasterDetail-CoreData-1Tests
+//  CoreDataMasterDetailTests.swift
+//  CoreDataMasterDetailTests
 //
 //  Created by Jason on 3/9/15.
 //  Copyright (c) 2015 Udacity. All rights reserved.
@@ -9,7 +9,7 @@
 import UIKit
 import XCTest
 
-class MasterDetail_CoreData_1Tests: XCTestCase {
+class CoreDataMasterDetailTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

@@ -6,13 +6,24 @@
 //  Copyright (c) 2015 Udacity. All rights reserved.
 //
 
+/**
+ * Five steps to using Core Data to persist MasterDetail:
+ *
+ * 1. Add a convenience method that find the shared context
+ * 2. Add fetchAllEvents()
+ * 3. Invoke fetchAllevents in viewDidLoad()
+ * 4. Create an Event object in insertNewObject()
+ * 5. Save the context in insertNewObject()
+ *
+ */
+
 import UIKit
 import CoreData
 
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     var events = [Event]()
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -23,22 +34,18 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
         self.navigationItem.rightBarButtonItem = addButton
-        
-        /**
-         * Step 3: initialize the events array by invoking fetchAllEvents. 
-         */
-    }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        // Step 3: initialize the events array with the results of the fetchAllEvents() method
+        // (see the initialization of the "actors" array in FavoreActorViewController for an example
     }
 
     func insertNewObject(sender: AnyObject) {
 
-        /**
-         * Step 4 - insert a new Event into the shared context. See actorPicker(:didPickActor) for an example
-         */
+        // Step 4: Create an Event object (and append it to the events array.)
+        // (see the actorPicker(:didPickActor:) method for an example with the Person object
+
+        // Step 5: Save the context (and check for an error)
+        // (see the actorPicker(:didPickActor:) method for an example
         
         tableView.reloadData()
     }
@@ -49,8 +56,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
         if segue.identifier == "showDetail" {
 
-            if let indexPath = self.tableView.indexPathForSelectedRow() {
-                let object = events[indexPath.row]
+        if let indexPath = self.tableView.indexPathForSelectedRow() {
+            let object = events[indexPath.row]
                 (segue.destinationViewController as DetailViewController).detailItem = object
             }
         }
@@ -65,9 +72,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
         let event = events[indexPath.row]
-        
+
         cell.textLabel!.text = event.timeStamp.description
-        
+
         return cell
     }
 
@@ -77,20 +84,18 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle,
         forRowAtIndexPath indexPath: NSIndexPath) {
-        
+
         if editingStyle == .Delete {
-                // How do we delete a managed object? An interesting, open question.
+            // How do we delete a managed object? An interesting, open question.
         }
     }
 
     // MARK: - Core Data Fetch Helpers
-    
-    /**
-     * Step 1: Add the sharedContext convenience property. See the FavoriteActorsViewController.swift for an example.
-     */
-    
-    /**
-     * Step 2: Add the fetchAllEvents. See fetchAllActors() FavoriteActorsViewController.swift for an example.
-     */
+
+    // Step 1: Add a "sharedContext" convenience property.
+    // (See the FavoriteActorViewController for an example)
+
+    // Step 2: Add a fetchAllEvents() method
+    // (See the fetchAllActors() method in FavoriteActorViewController for an example
 }
 
