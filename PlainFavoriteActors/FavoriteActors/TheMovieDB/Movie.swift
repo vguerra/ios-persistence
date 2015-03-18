@@ -8,9 +8,7 @@
 import UIKit
 import CoreData
 
-@objc(Movie)
-
-class Movie : NSManagedObject {
+class Movie {
     
     struct Keys {
         static let Title = "title"
@@ -18,21 +16,12 @@ class Movie : NSManagedObject {
         static let ReleaseDate = "release_date"
     }
     
-    @NSManaged var title: String
-    @NSManaged var id: Int
-    @NSManaged var posterPath: String?
-    @NSManaged var releaseDate: NSDate?
-    @NSManaged var actor: Person?
+    var title: String
+    var id: Int
+    var posterPath: String?
+    var releaseDate: NSDate?
     
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
-    }
-    
-    init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
-        
-        // Core Data
-        let entity =  NSEntityDescription.entityForName("Movie", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    init(dictionary: [String : AnyObject]) {
         
         // Dictionary
         title = dictionary[Keys.Title] as String
