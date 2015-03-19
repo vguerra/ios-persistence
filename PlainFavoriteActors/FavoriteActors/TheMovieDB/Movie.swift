@@ -16,6 +16,7 @@ class Movie : NSManagedObject {
         static let Title = "title"
         static let PosterPath = "poster_path"
         static let ReleaseDate = "release_date"
+        static let ID = "id"
     }
     
     @NSManaged var title: String

@@ -12,6 +12,7 @@ import CoreData
 class FavoriteActorViewController : UITableViewController, ActorPickerViewControllerDelegate {
     
     var actors = [Person]()
+    lazy var sharedContext = {CoreDataStackManager.sharedInstance().managedObjectContext!}()
     
     // MARK: - Life Cycle
     
@@ -20,12 +21,28 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addActor")
+        
+        actors = fetchAllActors()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         tableView.reloadData()
+    }
+    
+    // Mark: - Fetching
+    
+    func fetchAllActors() -> [Person] {
+        let error: NSErrorPointer = nil
+        let fetchRequest = NSFetchRequest(entityName: "Person")
+        let results = sharedContext.executeFetchRequest(fetchRequest, error: error)
+        
+        if error != nil {
+            println("Error in fectchAllActors(): \(error)")
+        }
+        
+        return results as [Person]
     }
     
     // Mark: - Actions
@@ -47,7 +64,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             
             // Debugging output
             println("picked actor with name: \(newActor.name),  id: \(newActor.id), profilePath: \(newActor.imagePath)")
-
+            
             // Check to see if we already have this actor. If so, return.
             for a in actors {
                 if a.id == newActor.id {
@@ -55,11 +72,29 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
                 }
             }
             
-            // Here we add the actor object that comes from the ActorPickerViewController. Remember
-            // that we cannot do this directly once we incoporate Core Data. The ActorPickerViewController
-            // uses a "scratch" context. It fills its table with actors that have not been picked. We 
-            // need to create a new person object that is inserted into the shared context. 
-            self.actors.append(newActor)
+            // The actor that was picked is from a different managed object context.
+            // We need to make a new actor. The easiest way to do that is to make a dictionary.
+            
+            var dictionary = [String : AnyObject]()
+            
+            dictionary[Person.Keys.ID] = newActor.id
+            dictionary[Person.Keys.Name] = newActor.name
+            dictionary[Person.Keys.ProfilePath] = newActor.imagePath
+            
+            // Then init, using the shared Context
+            let actorToBeAdded = Person(dictionary: dictionary, context: sharedContext)
+            
+            // And add append the actor to the array as well
+            self.actors.append(actorToBeAdded)
+            
+            // Save the context.
+            var error: NSError? = nil
+            
+            sharedContext.save(&error)
+            
+            if let error = error? {
+                println("error saving context: \(error.localizedDescription)")
+            }
         }
     }
     
