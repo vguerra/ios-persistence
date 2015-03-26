@@ -11,26 +11,22 @@ import UIKit
 import CoreData
 
 /**
-* This MasterViewController conforms to the NSFetchedResultsControllerDelegate protocol. As a delegate
-* it will be receiving invocations from an object. That object is a helper controller: the Fetch Results
-* Controller.
+* This MasterViewController uses a NSFetchedResults controller to store Event objects. The fetched results controller
+* replaces the "objects" array that has been used in past versions.
 *
-* Visualize the MasterViewController when it is on the screen for a moment (or run the app and take a look)
-* You will recall that it displays a table full of time stamps.
+* It is only using the fetched results controller in the first of its roles: storage for results of a fetch
 *
-* In the versions of this code that we have seen so far these time stamps were stored in an array, and the
-* array was used to populate the table. But if you look below you will see that there is no array in this class.
-*
-* How does the table get populated? What is this Fetch Results Controller? What are the delegate methods that we
-* will use to hear from this controller? Those are the key questions to hold onto as you approach the code.
+* It is not yet using the fetched results controller in second of its roles: to actively notify this view controller 
+* of changes to the data
 */
 
-class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class MasterViewController: UITableViewController {
+    
+    // Notice that an array of events is conspiciously missing.
     
     // The viewDidLoad method has two jobs in this view controller:
     // 1. Set the left and right navigation buttons. This is the same as last time we used MasterDetail
     // 2. Start up the fetchedResultsController. This is new.
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -56,10 +52,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     // Create a new event, save the context.
     // This may be the most interesting method in the code. Notice the array is conspicuously missing.
-    // How will this event end up in the table?
     
     func insertNewObject(sender: AnyObject) {
-        let event = Event(context: context)
+        let event = Event(context: sharedContext)
         
         event.timeStamp = NSDate()
         
@@ -68,7 +63,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     // Our typical lazy context var, for convenient access to the shared Managed Object Context
     
-    lazy var context: NSManagedObjectContext = {
+    lazy var sharedContext: NSManagedObjectContext = {
             CoreDataStackManager.sharedInstance().managedObjectContext!
         }()
     
@@ -76,77 +71,25 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     lazy var fetchedResultsController: NSFetchedResultsController = {
         
-            let fetchRequest = NSFetchRequest()
+            // Create the fetch request
+            let fetchRequest = NSFetchRequest(entityName: "Event")
             
-            // Set the entity
-            fetchRequest.entity = NSEntityDescription.entityForName("Event", inManagedObjectContext: self.context)
-            
-            // Edit the sort key as appropriate.
-            let sortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
-            let sortDescriptors = [sortDescriptor]
-            
-            fetchRequest.sortDescriptors = [sortDescriptor]
+            // Add a sort descriptor. This enforces a sort order on the results that are generated
+            // In this case we want the events sored by their timeStamps.
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timeStamp", ascending: false)]
             
             // Create the Fetched Results Controller
-            let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.context, sectionNameKeyPath: nil, cacheName: "Master")
-            
-            // Set ourself as the delegate. This is the key relationship between this view conttoller, and
-            // the fetched results controller
-            fetchedResultsController.delegate = self
+            let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
             
             // Return the fetched results controller. It will be the value of the lazy variable
             return fetchedResultsController
         } ()
     
     
-    // MARK: - Fetched Results Controller Delegate
-    
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        self.tableView.beginUpdates()
-    }
-    
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-        switch type {
-        case .Insert:
-            self.tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Delete:
-            self.tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        default:
-            return
-        }
-    }
-    
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        switch type {
-        case .Insert:
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-        case .Delete:
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-        case .Update:
-            let cell = tableView.cellForRowAtIndexPath(indexPath!)!
-            let event = fetchedResultsController.objectAtIndexPath(indexPath!) as Event
-            cell.textLabel!.text = event.timeStamp.description
-        case .Move:
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-        default:
-            return
-        }
-    }
-    
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        self.tableView.endUpdates()
-    }
-    
-    
     // MARK: - Table View
     
-    // These are fairly different that table view data source methods we have written before. 
+    // These are fairly different that table view data source methods we have written before.
     // Notice how heavily they lean on the Fetched Results Controller.
-    
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.fetchedResultsController.sections?.count ?? 0
-    }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
@@ -154,23 +97,31 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+
+        // *** This is, perhaps, the most novel and interesting line in the file right now. ***
+        //
+        // Notice that the fetchedResultsController is storing our Event objects. 
+        // Here we get back an event by passing in an indexPath. The "objectAtIndexPath"
+        // is designed for our convenience in this metho, cellForRowAtIndexPath
         let event = self.fetchedResultsController.objectAtIndexPath(indexPath) as Event
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
         
         cell.textLabel!.text = event.timeStamp.description
         
         return cell
     }
     
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
+    // This is the table view delegate method that is invoked when we delete a row from the table. 
+    // Notice how the implementation works: 
+    //  - We get the event for the index path of the row
+    //  - We delete this object using the sharedContext. This is new. We haven't called this out in a commnent before
+    //  - Finaly we save the contex.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
         if editingStyle == .Delete {
             let event = self.fetchedResultsController.objectAtIndexPath(indexPath) as Event
-            context.deleteObject(event)
+            sharedContext.deleteObject(event)
             
             CoreDataStackManager.sharedInstance().saveContext()
         }
@@ -186,6 +137,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         if segue.identifier == "showDetail" {
             
             if let indexPath = self.tableView.indexPathForSelectedRow() {
+                
+                // Right here. We use the objectAtIndexPath again to get an Event.
                 let object = fetchedResultsController.objectAtIndexPath(indexPath) as NSManagedObject
                 (segue.destinationViewController as DetailViewController).detailItem = object
             }
