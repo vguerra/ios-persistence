@@ -13,9 +13,11 @@ import CoreData
  * Challenge 1: Convert Favorite Actors to Fetched Results View Controller.
  */
 
+// Step 8: Add the NSFetchedResultsControllerDelegate protocol to the class declaration
+
 class FavoriteActorViewController : UITableViewController, ActorPickerViewControllerDelegate {
    
-    // Step 3: Remove the actors array
+    // Step 4: Remove the actors array
     var actors = [Person]()
     
     // MARK: - Life Cycle
@@ -45,10 +47,9 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         return CoreDataStackManager.sharedInstance().managedObjectContext!
     }
     
-    // Step 1 - Add the lazy fetchedResultsController property. See the reference sheet in the lesson if you 
-    // want additional help creating this property.
+    // Step 1 - Add the lazy fetchedResultsController property. See the reference sheet.
 
-    // Step 4: Remove this method, and the invocation
+    // Step 5: Remove this method, and the invocation
     
     func fetchAllActors() -> [Person] {
         let error: NSErrorPointer = nil
@@ -97,7 +98,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             // Now we create a new Person, using the shared Context
             let actorToBeAdded = Person(dictionary: dictionary, context: sharedContext)
 
-            // Step 2: Do not add actors to the actors array.
+            // Step 3: Do not add actors to the actors array.
             // This is no longer necessary once we are modifying our table through the
             // fetched results controller delefate methods
             self.actors.append(actorToBeAdded)
@@ -108,7 +109,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     
     // MARK: - Table View
     
-    // Step 5: Replace the actors array in the table view methods. See the comments below
+    // Step 6: Replace the actors array in the table view methods. See the comments below
     
     // This one is particularly tricky. You will need to get the "section" object for section 0, then
     // get the number of objects in this section. See the reference sheet for an example.
@@ -201,7 +202,8 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             cell.taskToCancelifCellIsReused = task
         }
     }
-
+    
+    // Step 7: You can implmement the delegate methods here. Or maybe above the table methods. Anywhere is fine.
     
     // MARK: - Saving the array
     
