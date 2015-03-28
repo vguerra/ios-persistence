@@ -14,9 +14,10 @@ protocol ActorPickerViewControllerDelegate {
 }
 
 /**
-* Challenge Step 3: Convert Actor Picker to Fetched Results View Controller.
+* Challenge 3: Convert Actor Picker to Fetched Results View Controller.
 */
 
+// Step 5: the view controller should conform to NSFetchedResultsControllerDelegate
 class ActorPickerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     @IBOutlet weak var tableView : UITableView!
@@ -39,6 +40,10 @@ class ActorPickerViewController: UIViewController, UITableViewDelegate, UITableV
         // Set the temporary context
         temporaryContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType)
         temporaryContext.persistentStoreCoordinator = sharedContext.persistentStoreCoordinator
+        
+        // Step 2: perform the fetch with: fetchedResultsController.performFetch(nil)
+        
+        // Step 6: add the view controller as the delegate of the fetchedResultsController
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -71,11 +76,10 @@ class ActorPickerViewController: UIViewController, UITableViewDelegate, UITableV
         
         // If the text is empty we are done
         if searchText == "" {
-            actors = [Person]()
-            tableView?.reloadData()
-            objc_sync_exit(self)
             return
         }
+        
+        // Remove all actors from the temporary context
         
         // Start a new one download
         let resource = TheMovieDB.Resources.SearchPerson
@@ -94,13 +98,8 @@ class ActorPickerViewController: UIViewController, UITableViewDelegate, UITableV
                 self.searchTask = nil
                 
                 // Create an array of Person instances from the JSON dictionaries
-                self.actors = actorDictionaries.map() {
+                actorDictionaries.map() {
                     Person(dictionary: $0, context: self.temporaryContext)
-                }
-                
-                // Reload the table on the main thread
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.tableView!.reloadData()
                 }
             }
         }
@@ -112,6 +111,7 @@ class ActorPickerViewController: UIViewController, UITableViewDelegate, UITableV
     
     // MARK: - Table View Delegate and Data Source
     
+    // Step 3: Replace the three table view methods
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let CellReuseId = "ActorSearchCell"
         let actor = actors[indexPath.row]
@@ -135,6 +135,11 @@ class ActorPickerViewController: UIViewController, UITableViewDelegate, UITableV
         
         self.dismissViewControllerAnimated(true, completion: nil)
     }
+    
+    // Step 4: You can add the delegate methods here
+
+    
+    // MARK: - Configure Cell
     
     // All right, this is kind of meager. But its nice to be consistent
     func configureCell(cell: UITableViewCell, actor: Person) {
