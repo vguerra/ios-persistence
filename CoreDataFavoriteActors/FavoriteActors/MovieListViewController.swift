@@ -26,6 +26,10 @@ class MovieListViewController : UITableViewController {
         super.viewDidLoad()
         
         self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        // Step 2: Perform the fetch
+        
+        // Step 6: Set the delegate to this view controller
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -72,17 +76,20 @@ class MovieListViewController : UITableViewController {
         return CoreDataStackManager.sharedInstance().managedObjectContext!
     }
     
+    // Step 1: This would be a nice place to paste the lazy fetchedResultsController
     
     // MARK: - Table View
+    
+    // Step 3: Update the three table view methods
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return actor.movies.count
     }
     
     /**
-    The downloading of movie posters is handled here. Notice how the method uses a unique
-    table view cell that holds on to a task so that it can be canceled.
-    */
+     * The downloading of movie posters is handled here. Notice how the method uses a unique
+     * table view cell that holds on to a task so that it can be canceled.
+     */
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let movie = actor.movies[indexPath.row]
@@ -106,6 +113,12 @@ class MovieListViewController : UITableViewController {
             break
         }
     }
+    
+    // MARK: - Fetched Results Controller Delegate
+    
+    // Step 4: This would be a great place to add the delegate methods
+    
+    // MARK: - Configure Cell
     
     func configureCell(cell: TaskCancelingTableViewCell, movie: Movie) {
         var posterImage = UIImage(named: "posterPlaceHoldr")
