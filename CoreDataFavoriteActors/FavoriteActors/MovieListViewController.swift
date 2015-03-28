@@ -13,6 +13,7 @@ import CoreData
 * Challenge Step 2: Convert Movie List to Fetched Results View Controller.
 */
 
+// Step 5: The view controller should conform to the NSFetchedResultsController protocol
 class MovieListViewController : UITableViewController {
     
     // This array needs to be replaced by a lazy fetchedResultsController property
@@ -80,16 +81,11 @@ class MovieListViewController : UITableViewController {
     
     // MARK: - Table View
     
-    // Step 3: Update the three table view methods
+    // Step 3: Update these three table view methods
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return actor.movies.count
     }
-    
-    /**
-    * The downloading of movie posters is handled here. Notice how the method uses a unique
-    * table view cell that holds on to a task so that it can be canceled.
-    */
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let movie = actor.movies[indexPath.row]
@@ -101,7 +97,6 @@ class MovieListViewController : UITableViewController {
         
         return cell
     }
-    
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
