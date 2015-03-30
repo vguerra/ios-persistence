@@ -21,7 +21,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addActor")
 
         // Unarchive the graph when the list is first shown
-        self.actors = NSKeyedUnarchiver.unarchiveObjectWithFile(actorsFilePath) as [Person]
+        self.actors = NSKeyedUnarchiver.unarchiveObjectWithFile(actorsFilePath) as? [Person] ?? [Person]()
     }
     
     override func viewWillAppear(animated: Bool) {

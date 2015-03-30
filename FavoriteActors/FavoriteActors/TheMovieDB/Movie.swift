@@ -45,6 +45,7 @@ class Movie : NSObject, NSCoding {
     
     func encodeWithCoder(archiver: NSCoder) {
         
+        archiver.encodeInteger(id, forKey: TheMovieDB.Keys.ID)
         archiver.encodeObject(title, forKey: Keys.Title)
         archiver.encodeObject(posterPath, forKey: Keys.PosterPath)
         archiver.encodeObject(releaseDate, forKey: Keys.ReleaseDate)
@@ -53,6 +54,7 @@ class Movie : NSObject, NSCoding {
     required init(coder unarchiver: NSCoder) {
         super.init()
         
+        id = unarchiver.decodeIntegerForKey(TheMovieDB.Keys.ID)
         title = unarchiver.decodeObjectForKey(Keys.Title) as String
         posterPath = unarchiver.decodeObjectForKey(Keys.PosterPath) as? String
         releaseDate = unarchiver.decodeObjectForKey(Keys.ReleaseDate) as? NSDate
