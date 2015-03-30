@@ -42,7 +42,7 @@ class ActorPickerViewController: UIViewController, UITableViewDelegate, UITableV
         temporaryContext.persistentStoreCoordinator = sharedContext.persistentStoreCoordinator
         
         // Step 2: perform the fetch with: fetchedResultsController.performFetch(nil)
-        
+         
         // Step 6: add the view controller as the delegate of the fetchedResultsController
     }
     
