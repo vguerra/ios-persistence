@@ -46,7 +46,7 @@ class MovieListViewController : UITableViewController {
                             
                             // We associate this movie with it's actor by appending it to the array
                             // In core data we use the relationship. We set the movie's actor property
-                            self.actor.movies.append(movie)
+                            movie.actor = self.actor
                             
                             return movie
                         }

@@ -42,6 +42,9 @@ class MovieListViewController : UITableViewController {
                         var movies = moviesDictionaries.map() { (dictionary: [String : AnyObject]) -> Movie in
                             let movie = Movie(dictionary: dictionary, context: self.sharedContext)
         
+                            // Establish the relationship between the movie and the actor
+                            // We use the inverse. The result is that the movie is added to the actors
+                            // array of movies. 
                             movie.actor = self.actor
                             
                             return movie
