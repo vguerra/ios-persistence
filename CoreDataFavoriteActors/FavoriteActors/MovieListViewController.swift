@@ -79,7 +79,6 @@ class MovieListViewController : UITableViewController, NSFetchedResultsControlle
         return CoreDataStackManager.sharedInstance().managedObjectContext!
     }
     
-    // Step 1: This would be a nice place to paste the lazy fetchedResultsController
     
     // Mark: - Fetched Results Controller
     
