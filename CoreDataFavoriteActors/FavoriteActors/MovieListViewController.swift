@@ -134,7 +134,8 @@ class MovieListViewController : UITableViewController, NSFetchedResultsControlle
                 
                 // Here we get the actor, then delete it from core data
                 let movie = fetchedResultsController.objectAtIndexPath(indexPath) as Movie
-                sharedContext.delete(movie)
+                sharedContext.deleteObject(movie)
+                CoreDataStackManager.sharedInstance().saveContext()
                 
             default:
                 break

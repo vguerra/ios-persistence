@@ -172,7 +172,8 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
                 
                 // Here we get the actor, then delete it from core data
                 let actor = fetchedResultsController.objectAtIndexPath(indexPath) as Person
-                sharedContext.delete(actor)
+                sharedContext.deleteObject(actor)
+                CoreDataStackManager.sharedInstance().saveContext()
                 
             default:
                 break
