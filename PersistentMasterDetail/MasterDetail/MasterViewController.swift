@@ -10,7 +10,7 @@ import UIKit
 
 class MasterViewController: UITableViewController {
 
-    var objects = NSMutableArray()
+    var objects = [AnyObject]()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,14 +23,14 @@ class MasterViewController: UITableViewController {
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
         self.navigationItem.rightBarButtonItem = addButton
         
-        if let array = NSKeyedUnarchiver.unarchiveObjectWithFile(filePath) as? NSMutableArray {
+        if let array = NSKeyedUnarchiver.unarchiveObjectWithFile(filePath) as? [AnyObject] {
             objects = array
         }
     }
 
     func insertNewObject(sender: AnyObject) {
         // Add the object
-        objects.insertObject(NSDate(), atIndex: 0)
+        objects.insert(NSDate(), atIndex: 0)
         
         // Insert the row
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
@@ -82,7 +82,7 @@ class MasterViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            objects.removeObjectAtIndex(indexPath.row)
+            objects.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
