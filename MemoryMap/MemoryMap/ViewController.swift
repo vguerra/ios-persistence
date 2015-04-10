@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     // A convenient property
     var filePath : String {
         let manager = NSFileManager.defaultManager()
-        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL
+        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
         return url.URLByAppendingPathComponent("mapRegionArchive").path!
     }
     
@@ -57,12 +57,12 @@ class ViewController: UIViewController {
         // previous center and span
         if let regionDictionary = NSKeyedUnarchiver.unarchiveObjectWithFile(filePath) as? [String : AnyObject] {
             
-            let longitude = regionDictionary["longitude"] as CLLocationDegrees
-            let latitude = regionDictionary["latitude"] as CLLocationDegrees
+            let longitude = regionDictionary["longitude"] as! CLLocationDegrees
+            let latitude = regionDictionary["latitude"] as! CLLocationDegrees
             let center = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
             
-            let longitudeDelta = regionDictionary["latitudeDelta"] as CLLocationDegrees
-            let latitudeDelta = regionDictionary["latitudeDelta"] as CLLocationDegrees
+            let longitudeDelta = regionDictionary["latitudeDelta"] as! CLLocationDegrees
+            let latitudeDelta = regionDictionary["latitudeDelta"] as! CLLocationDegrees
             let span = MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
             
             let savedRegion = MKCoordinateRegion(center: center, span: span)
