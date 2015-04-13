@@ -58,7 +58,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
         if let indexPath = self.tableView.indexPathForSelectedRow() {
             let object = events[indexPath.row]
-                (segue.destinationViewController as DetailViewController).detailItem = object
+                (segue.destinationViewController as! DetailViewController).detailItem = object
             }
         }
     }
@@ -70,7 +70,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
         let event = events[indexPath.row]
 
         cell.textLabel!.text = event.timeStamp.description
