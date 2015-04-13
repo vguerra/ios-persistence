@@ -24,8 +24,8 @@ class Person : NSObject, NSCoding {
     var movies = [Movie]()
     
     init(dictionary: [String : AnyObject]) {
-        name = dictionary[Keys.Name] as String
-        id = dictionary[TheMovieDB.Keys.ID] as Int
+        name = dictionary[Keys.Name] as! String
+        id = dictionary[TheMovieDB.Keys.ID] as! Int
         
         if var pathForImgage = dictionary[Keys.ProfilePath] as? String {
             imagePath = pathForImgage
@@ -58,10 +58,10 @@ class Person : NSObject, NSCoding {
         super.init()
         
         // Unarchive the data, one property at a time
-        name = unarchiver.decodeObjectForKey(Keys.Name) as String
-        id = unarchiver.decodeObjectForKey(Keys.ID) as Int
-        imagePath = unarchiver.decodeObjectForKey(Keys.ProfilePath) as String
-        movies = unarchiver.decodeObjectForKey(Keys.Movies) as [Movie]
+        name = unarchiver.decodeObjectForKey(Keys.Name) as! String
+        id = unarchiver.decodeObjectForKey(Keys.ID) as! Int
+        imagePath = unarchiver.decodeObjectForKey(Keys.ProfilePath) as! String
+        movies = unarchiver.decodeObjectForKey(Keys.Movies) as! [Movie]
     }
 }
 

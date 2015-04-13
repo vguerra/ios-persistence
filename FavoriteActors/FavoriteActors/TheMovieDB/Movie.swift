@@ -21,8 +21,8 @@ class Movie : NSObject, NSCoding {
     var releaseDate: NSDate? = nil
         
     init(dictionary: [String : AnyObject]) {
-        title = dictionary[Keys.Title] as String
-        id = dictionary[TheMovieDB.Keys.ID] as Int
+        title = dictionary[Keys.Title] as! String
+        id = dictionary[TheMovieDB.Keys.ID] as! Int
         posterPath = dictionary[Keys.PosterPath] as? String
         
         if let releaseDateString = dictionary[Keys.ReleaseDate] as? String {
@@ -55,7 +55,7 @@ class Movie : NSObject, NSCoding {
         super.init()
         
         id = unarchiver.decodeIntegerForKey(TheMovieDB.Keys.ID)
-        title = unarchiver.decodeObjectForKey(Keys.Title) as String
+        title = unarchiver.decodeObjectForKey(Keys.Title) as! String
         posterPath = unarchiver.decodeObjectForKey(Keys.PosterPath) as? String
         releaseDate = unarchiver.decodeObjectForKey(Keys.ReleaseDate) as? NSDate
     }
