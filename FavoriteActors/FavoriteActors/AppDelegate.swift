@@ -32,14 +32,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let fetchRequest = NSFetchRequest(entityName: "Person")
         let actorCount = context.executeFetchRequest(fetchRequest, error: nil)?.count ?? 0
         
+        var dictionary: [String : AnyObject]
+        var person: Person
+        
         if actorCount == 0 {
             
-            let kevinBaconDictionary = ["name" : "Kevin Bacon", "id" : 21305, "profile_path":"/p1uCaOjxSC1xS5TgmD4uloAkbLd.jpg"]
-            let kevinBacon = Person(dictionary: kevinBaconDictionary, context: context)
+            dictionary = ["name" : "LL Cool J", "id" : 36424, "profile_path":"/bPZmMROI8KXbZl3ljNRmkU6Tnb3.jpg"]
+            person = Person(dictionary: dictionary, context: context)
+            
+            dictionary = ["name" : "Ellen Page", "id" : 27578, "profile_path":"/vDunkYxyQPkzx9EwkfSZVCSzBlO.jpg"]
+            person = Person(dictionary: dictionary, context: context)
+            
+            dictionary = ["name" : "Bill Murray", "id" : 1532, "profile_path":"/eb58HuFIrxS0zUmbmW4d8YXTbje.jpg"]
+            person = Person(dictionary: dictionary, context: context)
+            
             
             context.save(&error)
             
-            if let error = error? {
+            if let error = error {
                 println(error.description)
             }
         }
@@ -72,7 +82,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "Udacity.CDThrowaway" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1] as NSURL
+        return urls[urls.count-1] as! NSURL
         }()
     
     lazy var managedObjectModel: NSManagedObjectModel = {
@@ -98,7 +108,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
             dict[NSUnderlyingErrorKey] = error
-            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
+            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict as [NSObject : AnyObject])
             // Left in for development development.
             
             NSLog("Unresolved error \(error), \(error!.userInfo)")
@@ -133,4 +143,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 }
-

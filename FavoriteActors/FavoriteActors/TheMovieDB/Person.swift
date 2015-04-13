@@ -38,8 +38,8 @@ class Person : NSManagedObject {
         let entity =  NSEntityDescription.entityForName("Person", inManagedObjectContext: context)!
         super.init(entity: entity,insertIntoManagedObjectContext: context)
         
-        name = dictionary[Keys.Name] as String
-        id = dictionary[Keys.ID] as Int
+        name = dictionary[Keys.Name] as! String
+        id = dictionary[Keys.ID] as! Int
         
         if var pathForImgage = dictionary[Keys.ProfilePath] as? String {
             imagePath = pathForImgage
