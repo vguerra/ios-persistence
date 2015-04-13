@@ -33,7 +33,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     // MARK: - Core Data Convenience. This will be useful for fetching. And for adding and saving objects as well.
     
     var sharedContext: NSManagedObjectContext {
-        let delegate = UIApplication.sharedApplication().delegate as AppDelegate
+        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
         return delegate.managedObjectContext!
     }
 
@@ -61,13 +61,13 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         }
         
         // Return the results, cast to an array of Person objects
-        return results as [Person]
+        return results as! [Person]
     }
     
     // Mark: - Actions
     
     func addActor() {
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ActorPickerViewController") as ActorPickerViewController
+        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ActorPickerViewController") as! ActorPickerViewController
         
         controller.delegate = self
         
@@ -79,7 +79,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     func actorPicker(actorPicker: ActorPickerViewController, didPickActor actor: Person?) {
         
         
-        if let newActor = actor? {
+        if let newActor = actor {
             
             // Debugging output
             println("picked actor with name: \(newActor.name),  id: \(newActor.id), profilePath: \(newActor.imagePath)")
@@ -111,7 +111,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             
             sharedContext.save(&error)
             
-            if let error = error? {
+            if let error = error {
                 println("error saving context: \(error.localizedDescription)")
             }
         }
@@ -127,13 +127,13 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         let actor = actors[indexPath.row]
         let CellIdentifier = "ActorCell"
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as ActorTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as! ActorTableViewCell
         
         cell.nameLabel!.text = actor.name
         cell.frameImageView.image = UIImage(named: "personFrame")
         cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         
-        if let localImage = actor.image? {
+        if let localImage = actor.image {
             cell.actorImageView.image = localImage
         } else if actor.imagePath == "" {
             cell.actorImageView.image = UIImage(named: "personNoImage")
@@ -149,7 +149,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             let size = TheMovieDB.sharedInstance().config.profileSizes[1]
             let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: actor.imagePath) { (imageData, error) -> Void in
                 
-                if let data = imageData? {
+                if let data = imageData {
                     dispatch_async(dispatch_get_main_queue()) {
                         let image = UIImage(data: data)
                         actor.image = image
@@ -165,7 +165,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let controller = storyboard!.instantiateViewControllerWithIdentifier("MovieListViewController") as MovieListViewController
+        let controller = storyboard!.instantiateViewControllerWithIdentifier("MovieListViewController") as! MovieListViewController
         
         controller.actor = actors[indexPath.row]
         
@@ -187,7 +187,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     
     var actorArrayURL: NSURL {
         let filename = "favoriteActorsArray"
-        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL
+        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
         
         return documentsDirectoryURL.URLByAppendingPathComponent(filename)
     }

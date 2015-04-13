@@ -52,7 +52,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         sharedContext.save(&error)
         
-        if let error = error? {
+        if let error = error {
             println("error saving context: \(error)")
         }
         
@@ -67,7 +67,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             
             if let indexPath = self.tableView.indexPathForSelectedRow() {
                 let object = events[indexPath.row]
-                (segue.destinationViewController as DetailViewController).detailItem = object
+                (segue.destinationViewController as! DetailViewController).detailItem = object
             }
         }
     }
@@ -79,7 +79,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
         let event = events[indexPath.row]
         
         cell.textLabel!.text = event.timeStamp.description
@@ -103,7 +103,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     // Step 1: Add a "sharedContext" convenience property.
     var sharedContext: NSManagedObjectContext {
-        return (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!
+        return (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext!
     }
     
     // Step 2: Add a fetchAllEvents() method
@@ -125,12 +125,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         var results = sharedContext.executeFetchRequest(fetchRequest, error: &error)
         
-        if let error = error? {
+        if let error = error {
             println("Error fetching events: \(error)")
             return [Event]()
         }
         
-        return results as [Event]
+        return results as! [Event]
     }
 }
 
