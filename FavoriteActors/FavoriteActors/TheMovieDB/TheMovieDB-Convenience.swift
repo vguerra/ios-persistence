@@ -20,7 +20,7 @@ extension TheMovieDB {
         
         taskForResource(Resources.SearchMovie, parameters: parameters) { JSONResult, error in
             
-            if let error = error? {
+            if let error = error {
                 completionHandler(result: nil, error: error)
             } else {
                 
@@ -46,7 +46,7 @@ extension TheMovieDB {
 
         taskForResource(Resources.GenreIDMovies, parameters: parameters) {JSONResult, error in
             
-            if let error = error? {
+            if let error = error{
                 completionHandler(result: nil, error: error)
             } else {
                 
@@ -71,7 +71,7 @@ extension TheMovieDB {
         
         taskForResource(Resources.PersonIDMovieCredits, parameters: parameters) {JSONResult, error in
             
-            if let error = error? {
+            if let error = error {
                 completionHandler(result: nil, error: error)
             } else {
                 
@@ -105,7 +105,7 @@ extension TheMovieDB {
         
         taskForResource(Resources.MovieIDCredits, parameters: parameters) { JSONResult, error in
             
-            if let error = error? {
+            if let error = error {
                 completionHandler(results: nil, error: error)
             } else {
                 
@@ -127,9 +127,9 @@ extension TheMovieDB {
         
         taskForResource(Resources.Config, parameters: parameters) { JSONResult, error in
             
-            if let error = error? {
+            if let error = error {
                 completionHandler(didSucceed: false, error: error)
-            } else if let newConfig = Config(dictionary: JSONResult as [String : AnyObject]) {
+            } else if let newConfig = Config(dictionary: JSONResult as![String : AnyObject]) {
                 self.config = newConfig
                 completionHandler(didSucceed: true, error: nil)
             } else {
