@@ -51,6 +51,15 @@ class MovieListViewController : UITableViewController {
                         dispatch_async(dispatch_get_main_queue()) {
                             self.tableView.reloadData()
                         }
+                        
+                        // Save the Context
+                        var error: NSError? = nil
+                        self.sharedContext.save(&error)
+                        
+                        if let error = error {
+                            println(error)
+                        }
+                        
                     } else {
                         let error = NSError(domain: "Movie for Person Parsing. Cant find cast in \(JSONResult)", code: 0, userInfo: nil)
                         self.alertViewForError(error)
