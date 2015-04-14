@@ -44,12 +44,12 @@ class MasterViewController: UITableViewController {
         let results = sharedContext.executeFetchRequest(fetchRequest, error: &error)
         
         // Check for Errors
-        if let error = error? {
+        if let error = error {
             println("Error in fectchAllActors(): \(error)")
         }
         
         // Return the results, cast to an array of Person objects
-        return results as [Event]
+        return results as! [Event]
     }
     
     func insertNewObject(sender: AnyObject) {
@@ -66,7 +66,7 @@ class MasterViewController: UITableViewController {
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow() {
                 let object = objects[indexPath.row] as Event
-                (segue.destinationViewController as DetailViewController).detailItem = object
+                (segue.destinationViewController as! DetailViewController).detailItem = object
             }
         }
     }
@@ -82,7 +82,7 @@ class MasterViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
         
         let object = objects[indexPath.row] as Event
         cell.textLabel!.text = object.timeStamp.description
