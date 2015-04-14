@@ -44,7 +44,7 @@ class MovieListViewController : UITableViewController, NSFetchedResultsControlle
             var parameters = [TheMovieDB.Keys.ID : actor.id]
             
             TheMovieDB.sharedInstance().taskForResource(resource, parameters: parameters){ JSONResult, error  in
-                if let error = error? {
+                if let error = error {
                     println(error)
                 } else {
                     
@@ -103,7 +103,7 @@ class MovieListViewController : UITableViewController, NSFetchedResultsControlle
     // Step 3: Update the three table view methods
     // This is the trickiest. But it will be exactly the same in all three view controllers
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section] as
+        let sectionInfo = self.fetchedResultsController.sections![section] as!
         NSFetchedResultsSectionInfo
         
         return sectionInfo.numberOfObjects
@@ -114,9 +114,9 @@ class MovieListViewController : UITableViewController, NSFetchedResultsControlle
             let CellIdentifier = "MovieCell"
             
             // Here is how to replace the actors array using objectAtIndexPath
-            let movie = fetchedResultsController.objectAtIndexPath(indexPath) as Movie
+            let movie = fetchedResultsController.objectAtIndexPath(indexPath) as! Movie
             
-            let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as TaskCancelingTableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as! TaskCancelingTableViewCell
             
             // This is the new configureCell method
             configureCell(cell, movie: movie)
@@ -132,7 +132,7 @@ class MovieListViewController : UITableViewController, NSFetchedResultsControlle
             case .Delete:
                 
                 // Here we get the actor, then delete it from core data
-                let movie = fetchedResultsController.objectAtIndexPath(indexPath) as Movie
+                let movie = fetchedResultsController.objectAtIndexPath(indexPath) as! Movie
                 sharedContext.deleteObject(movie)
                 CoreDataStackManager.sharedInstance().saveContext()
                 
@@ -183,8 +183,8 @@ class MovieListViewController : UITableViewController, NSFetchedResultsControlle
                 tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
                 
             case .Update:
-                let cell = tableView.cellForRowAtIndexPath(indexPath!) as ActorTableViewCell
-                let movie = controller.objectAtIndexPath(indexPath!) as Movie
+                let cell = tableView.cellForRowAtIndexPath(indexPath!) as! ActorTableViewCell
+                let movie = controller.objectAtIndexPath(indexPath!) as! Movie
                 self.configureCell(cell, movie: movie)
                 
             case .Move:

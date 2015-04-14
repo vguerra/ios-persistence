@@ -73,7 +73,7 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
     // Mark: - Actions
     
     func addActor() {
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ActorPickerViewController") as ActorPickerViewController
+        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ActorPickerViewController") as! ActorPickerViewController
         
         controller.delegate = self
         
@@ -85,7 +85,7 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
     func actorPicker(actorPicker: ActorPickerViewController, didPickActor actor: Person?) {
         
         
-        if let newActor = actor? {
+        if let newActor = actor {
             
             // Debugging output
             println("picked actor with name: \(newActor.name),  id: \(newActor.id), profilePath: \(newActor.imagePath)")
@@ -115,7 +115,7 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
     // This one is particularly tricky. You will need to get the "section" object for section 0, then
     // get the number of objects in this section. See the reference sheet for an example.
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+        let sectionInfo = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
         return sectionInfo.numberOfObjects
     }
 
@@ -129,9 +129,9 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
             let CellIdentifier = "ActorCell"
             
             // Here is how to replace the actors array using objectAtIndexPath
-            let actor = fetchedResultsController.objectAtIndexPath(indexPath) as Person
+            let actor = fetchedResultsController.objectAtIndexPath(indexPath) as! Person
             
-            let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as
+            let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as!
             ActorTableViewCell
             
             // This is the new configureCell method
@@ -145,10 +145,10 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
         didSelectRowAtIndexPath indexPath: NSIndexPath) {
             let controller =
             storyboard!.instantiateViewControllerWithIdentifier("MovieListViewController")
-                as MovieListViewController
+                as! MovieListViewController
             
             // Similar to the method above
-            let actor = fetchedResultsController.objectAtIndexPath(indexPath) as Person
+            let actor = fetchedResultsController.objectAtIndexPath(indexPath) as! Person
             
             controller.actor = actor
             
@@ -171,7 +171,7 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
             case .Delete:
                 
                 // Here we get the actor, then delete it from core data
-                let actor = fetchedResultsController.objectAtIndexPath(indexPath) as Person
+                let actor = fetchedResultsController.objectAtIndexPath(indexPath) as! Person
                 sharedContext.deleteObject(actor)
                 CoreDataStackManager.sharedInstance().saveContext()
                 
@@ -220,8 +220,8 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
                 tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
                 
             case .Update:
-                let cell = tableView.cellForRowAtIndexPath(indexPath!) as ActorTableViewCell
-                let actor = controller.objectAtIndexPath(indexPath!) as Person
+                let cell = tableView.cellForRowAtIndexPath(indexPath!) as! ActorTableViewCell
+                let actor = controller.objectAtIndexPath(indexPath!) as! Person
                 self.configureCell(cell, withActor: actor)
                 
             case .Move:
@@ -249,7 +249,7 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
         cell.frameImageView.image = UIImage(named: "personFrame")
         cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         
-        if let localImage = actor.image? {
+        if let localImage = actor.image {
             cell.actorImageView.image = localImage
         } else if actor.imagePath == "" {
             cell.actorImageView.image = UIImage(named: "personNoImage")
@@ -266,7 +266,7 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
             let size = TheMovieDB.sharedInstance().config.profileSizes[1]
             let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: actor.imagePath!) { (imageData, error) -> Void in
                 
-                if let data = imageData? {
+                if let data = imageData {
                     dispatch_async(dispatch_get_main_queue()) {
                         let image = UIImage(data: data)
                         actor.image = image
@@ -284,7 +284,7 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
     
     var actorArrayURL: NSURL {
         let filename = "favoriteActorsArray"
-        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL
+        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
         
         return documentsDirectoryURL.URLByAppendingPathComponent(filename)
     }

@@ -35,8 +35,8 @@ class Movie : NSManagedObject {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
         // Dictionary
-        title = dictionary[Keys.Title] as String
-        id = dictionary[TheMovieDB.Keys.ID] as Int
+        title = dictionary[Keys.Title] as! String
+        id = dictionary[TheMovieDB.Keys.ID] as! Int
         posterPath = dictionary[Keys.PosterPath] as? String
         
         if let dateString = dictionary[Keys.ReleaseDate] as? String {
