@@ -23,8 +23,8 @@ class Person {
     
     init(dictionary: [String : AnyObject]) {
         
-        name = dictionary[Keys.Name] as String
-        id = dictionary[Keys.ID] as Int
+        name = dictionary[Keys.Name] as! String
+        id = dictionary[Keys.ID] as! Int
         imagePath = dictionary[Keys.ProfilePath] as? String
     }
     
