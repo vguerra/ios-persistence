@@ -42,7 +42,7 @@ class MasterViewController: UITableViewController {
         
         fetchedResultsController.performFetch(&error)
         
-        if let error = error? {
+        if let error = error {
             println("Unresolved error \(error), \(error.userInfo)")
             abort()
         }
@@ -92,7 +92,7 @@ class MasterViewController: UITableViewController {
     // Notice how heavily they lean on the Fetched Results Controller.
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+        let sectionInfo = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
         return sectionInfo.numberOfObjects
     }
     
@@ -103,9 +103,9 @@ class MasterViewController: UITableViewController {
         // Notice that the fetchedResultsController is storing our Event objects. 
         // Here we get back an event by passing in an indexPath. The "objectAtIndexPath"
         // is designed for our convenience in this metho, cellForRowAtIndexPath
-        let event = self.fetchedResultsController.objectAtIndexPath(indexPath) as Event
+        let event = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Event
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
         
         cell.textLabel!.text = event.timeStamp.description
         
@@ -120,7 +120,7 @@ class MasterViewController: UITableViewController {
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
         if editingStyle == .Delete {
-            let event = self.fetchedResultsController.objectAtIndexPath(indexPath) as Event
+            let event = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Event
             sharedContext.deleteObject(event)
             
             CoreDataStackManager.sharedInstance().saveContext()
@@ -139,8 +139,8 @@ class MasterViewController: UITableViewController {
             if let indexPath = self.tableView.indexPathForSelectedRow() {
                 
                 // Right here. We use the objectAtIndexPath again to get an Event.
-                let object = fetchedResultsController.objectAtIndexPath(indexPath) as NSManagedObject
-                (segue.destinationViewController as DetailViewController).detailItem = object
+                let object = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+                (segue.destinationViewController as! DetailViewController).detailItem = object
             }
         }
     }
