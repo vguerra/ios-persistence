@@ -47,12 +47,12 @@ class TheMovieDB : NSObject {
         
         let task = session.dataTaskWithRequest(request) {data, response, downloadError in
             
-            if let error = downloadError? {
+            if let error = downloadError {
                 let newError = TheMovieDB.errorForData(data, response: response, error: error)
                 completionHandler(result: nil, error: downloadError)
             } else {
                 println("Step 3 - taskForResource's completionHandler is invoked.")
-                TheMovieDB.parseJSONWithCompletionHandler(data, completionHandler)
+                TheMovieDB.parseJSONWithCompletionHandler(data, completionHandler: completionHandler)
             }
         }
         
@@ -75,7 +75,7 @@ class TheMovieDB : NSObject {
         
         let task = session.dataTaskWithRequest(request) {data, response, downloadError in
             
-            if let error = downloadError? {
+            if let error = downloadError {
                 let newError = TheMovieDB.errorForData(data, response: response, error: downloadError)
                 completionHandler(imageData: nil, error: newError)
             } else {
@@ -96,9 +96,9 @@ class TheMovieDB : NSObject {
         
         let task = taskForResource(Resources.Config, parameters: parameters) { JSONResult, error in
             
-            if let error = error? {
+            if let error = error {
                 completionHandler(didSucceed: false, error: error)
-            } else if let newConfig = Config(dictionary: JSONResult as [String : AnyObject]) {
+            } else if let newConfig = Config(dictionary: JSONResult as! [String : AnyObject]) {
                 self.config = newConfig
                 completionHandler(didSucceed: true, error: nil)
             } else {
@@ -138,7 +138,7 @@ class TheMovieDB : NSObject {
         
         let parsedResult: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError)
         
-        if let error = parsingError? {
+        if let error = parsingError {
             completionHandler(result: nil, error: error)
         } else {
             println("Step 4 - parseJSONWithCompletionHandler is invoked.")
@@ -154,7 +154,7 @@ class TheMovieDB : NSObject {
         
         for (key, value) in parameters {
             
-            // make sure that it is a string value
+            // Make sure that it is a string value
             let stringValue = "\(value)"
             
             // Escape it
@@ -162,11 +162,7 @@ class TheMovieDB : NSObject {
             
             // Append it
             
-            if let unwrappedEscapedValue = escapedValue? {
-                urlVars += [key + "=" + "\(unwrappedEscapedValue)"]
-            } else {
-                println("Warning: trouble excaping string \"\(stringValue)\"")
-            }
+            urlVars += [key + "=" + "\(escapedValue!)"]
         }
         
         return (!urlVars.isEmpty ? "?" : "") + join("&", urlVars)
