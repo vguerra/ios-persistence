@@ -42,7 +42,7 @@ class MovieListViewController : UITableViewController {
             var parameters = [TheMovieDB.Keys.ID : actor.id]
             
             TheMovieDB.sharedInstance().taskForResource(resource, parameters: parameters){ JSONResult, error  in
-                if let error = error? {
+                if let error = error {
                     println(error)
                 } else {
                     
@@ -61,6 +61,10 @@ class MovieListViewController : UITableViewController {
                         dispatch_async(dispatch_get_main_queue()) {
                             self.tableView.reloadData()
                         }
+                        
+                        // Save the context
+                        self.saveContext()
+                        
                     } else {
                         let error = NSError(domain: "Movie for Person Parsing. Cant find cast in \(JSONResult)", code: 0, userInfo: nil)
                         println(error)
@@ -73,9 +77,14 @@ class MovieListViewController : UITableViewController {
     
     // MARK: - Core Data Convenience
     
-    var sharedContext: NSManagedObjectContext {
+    lazy var sharedContext: NSManagedObjectContext =  {
         return CoreDataStackManager.sharedInstance().managedObjectContext!
+        }()
+    
+    func saveContext() {
+        CoreDataStackManager.sharedInstance().saveContext()
     }
+    
     
     // Step 1: This would be a nice place to paste the lazy fetchedResultsController
     
@@ -91,7 +100,7 @@ class MovieListViewController : UITableViewController {
         let movie = actor.movies[indexPath.row]
         let CellIdentifier = "MovieCell"
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as TaskCancelingTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as! TaskCancelingTableViewCell
         
         configureCell(cell, movie: movie)
         
