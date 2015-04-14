@@ -32,7 +32,7 @@ class MovieListViewController : UITableViewController {
             var parameters = [TheMovieDB.Keys.ID : actor.id]
             
             TheMovieDB.sharedInstance().taskForResource(resource, parameters: parameters){ JSONResult, error  in
-                if let error = error? {
+                if let error = error {
                     self.alertViewForError(error)
                 } else {
                     
@@ -51,6 +51,10 @@ class MovieListViewController : UITableViewController {
                         dispatch_async(dispatch_get_main_queue()) {
                             self.tableView.reloadData()
                         }
+                        
+                        // Save the context
+                        self.saveContext()
+                        
                     } else {
                         let error = NSError(domain: "Movie for Person Parsing. Cant find cast in \(JSONResult)", code: 0, userInfo: nil)
                         self.alertViewForError(error)
@@ -63,10 +67,14 @@ class MovieListViewController : UITableViewController {
     
     // MARK: - Core Data Convenience
     
-    var sharedContext: NSManagedObjectContext {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
-    }
     
+    lazy var sharedContext: NSManagedObjectContext =  {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }()
+    
+    func saveContext() {
+        CoreDataStackManager.sharedInstance().saveContext()
+    }
     
     // MARK: - Table View
     
@@ -84,7 +92,7 @@ class MovieListViewController : UITableViewController {
         let CellIdentifier = "MovieCell"
         var posterImage = UIImage(named: "posterPlaceHoldr")
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as TaskCancelingTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as! TaskCancelingTableViewCell
         
         cell.textLabel!.text = movie.title
         cell.imageView!.image = nil
