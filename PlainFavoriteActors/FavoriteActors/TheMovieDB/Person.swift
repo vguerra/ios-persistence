@@ -67,8 +67,8 @@ class Person : NSManagedObject {
         
         // After the Core Data work has been taken care of we can init the properties from the
         // dictionary. This works in the same way that it did before we started on Core Data
-        name = dictionary[Keys.Name] as String
-        id = dictionary[Keys.ID] as Int
+        name = dictionary[Keys.Name] as! String
+        id = dictionary[Keys.ID] as! Int
         imagePath = dictionary[Keys.ProfilePath] as? String
     }
     
