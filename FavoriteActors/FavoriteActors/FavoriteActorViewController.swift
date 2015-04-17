@@ -81,9 +81,6 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         
         if let newActor = actor {
             
-            // Debugging output
-            println("picked actor with name: \(newActor.name),  id: \(newActor.id), profilePath: \(newActor.imagePath)")
-
             // Check to see if we already have this actor. If so, return.
             for a in actors {
                 if a.id == newActor.id {
@@ -94,17 +91,25 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             // The actor that was picked is from a different managed object context. 
             // We need to make a new actor. The easiest way to do that is to make a dictionary.
             
-            let dictionary: [String : AnyObject] = [
+            var dictionary: [String : AnyObject] = [
                 Person.Keys.ID : newActor.id,
                 Person.Keys.Name : newActor.name,
-                Person.Keys.ProfilePath : newActor.imagePath
             ]
             
-            // If we didn't find any, then init, using the shared Context
-            let actorToBeAdded = Person(dictionary: dictionary, context: sharedContext)
+            if let imagePath = newActor.imagePath {
+                dictionary[Person.Keys.ProfilePath] = imagePath
+            }
 
-            // And add append the actor to the array as well
-            self.actors.append(actorToBeAdded)
+            // Insert the actor on the main thread
+            
+            dispatch_async(dispatch_get_main_queue()) {
+             
+                // Init the Person, using the shared Context
+                let actorToBeAdded = Person(dictionary: dictionary, context: self.sharedContext)
+
+                // Append the actor to the array
+                self.actors.append(actorToBeAdded)
+            }
         }
     }
     
@@ -126,7 +131,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         
         if let localImage = actor.image {
             cell.actorImageView.image = localImage
-        } else if actor.imagePath == "" {
+        } else if actor.imagePath == nil || actor.imagePath == "" {
             cell.actorImageView.image = UIImage(named: "personNoImage")
         }
             
@@ -138,7 +143,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             cell.actorImageView.image = UIImage(named: "personPlaceholder")
             
             let size = TheMovieDB.sharedInstance().config.profileSizes[1]
-            let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: actor.imagePath) { (imageData, error) -> Void in
+            let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: actor.imagePath!) { (imageData, error) -> Void in
                 
                 if let data = imageData {
                     dispatch_async(dispatch_get_main_queue()) {
