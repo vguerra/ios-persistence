@@ -88,13 +88,11 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
                 }
             }
             
-            // The actor that was picked is from a different managed object context. 
-            // We need to make a new actor. The easiest way to do that is to make a dictionary.
+            // Create a dictionary from the actor. Careful, the imagePath can be hil.
             
-            var dictionary: [String : AnyObject] = [
-                Person.Keys.ID : newActor.id,
-                Person.Keys.Name : newActor.name,
-            ]
+            var dictionary = [String : AnyObject]()
+            dictionary[Person.Keys.ID] = newActor.id
+            dictionary[Person.Keys.Name] = newActor.name
             
             if let imagePath = newActor.imagePath {
                 dictionary[Person.Keys.ProfilePath] = imagePath
