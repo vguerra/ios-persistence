@@ -25,7 +25,7 @@ class Movie : NSManagedObject {
     
     @NSManaged var title: String
     @NSManaged var id: Int
-    @NSManaged var posterPath: String
+    @NSManaged var posterPath: String?
     @NSManaged var releaseDate: NSDate
     @NSManaged var actor: Person
     
@@ -56,7 +56,7 @@ class Movie : NSManagedObject {
         }
         
         set {
-            TheMovieDB.Caches.imageCache.storeImage(newValue, withIdentifier: posterPath)
+            TheMovieDB.Caches.imageCache.storeImage(newValue, withIdentifier: posterPath!)
         }
     }
 }

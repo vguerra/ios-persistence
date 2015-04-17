@@ -27,7 +27,7 @@ class Person : NSManagedObject {
     
     @NSManaged var name: String
     @NSManaged var id: Int
-    @NSManaged var imagePath: String
+    @NSManaged var imagePath: String?
     @NSManaged var movies: [Movie]?
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
@@ -69,7 +69,7 @@ class Person : NSManagedObject {
         }
         
         set {
-            TheMovieDB.Caches.imageCache.storeImage(image, withIdentifier: imagePath)
+            TheMovieDB.Caches.imageCache.storeImage(image, withIdentifier: imagePath!)
         }
     }
 }
