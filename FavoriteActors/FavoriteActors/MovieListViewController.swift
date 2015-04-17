@@ -101,7 +101,7 @@ class MovieListViewController : UITableViewController {
         
         // Set the Movie Poster Image
         
-        if movie.posterImage == nil || movie.posterImage == "" {
+        if movie.posterPath == nil || movie.posterPath == "" {
             posterImage = UIImage(named: "noImage")
         } else if movie.posterImage != nil {
             posterImage = movie.posterImage
