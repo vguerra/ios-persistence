@@ -101,7 +101,7 @@ class MovieListViewController : UITableViewController {
         
         // Set the Movie Poster Image
         
-        if movie.posterImage == "" {
+        if movie.posterImage == nil || movie.posterImage == "" {
             posterImage = UIImage(named: "noImage")
         } else if movie.posterImage != nil {
             posterImage = movie.posterImage
@@ -113,7 +113,7 @@ class MovieListViewController : UITableViewController {
             let size = TheMovieDB.sharedInstance().config.posterSizes[1]
             
             // Start the task that will eventually download the image
-            let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: movie.posterPath) { data, error in
+            let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: movie.posterPath!) { data, error in
                 
                 if let error = error {
                     println("Poster download error: \(error.localizedDescription)")
