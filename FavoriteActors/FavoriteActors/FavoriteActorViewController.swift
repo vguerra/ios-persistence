@@ -46,6 +46,9 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             
             // If we didn't find any, then add
             self.actors.append(newActor)
+
+            // And reload the table
+            self.tableView.reloadData()
         }
     }
     
