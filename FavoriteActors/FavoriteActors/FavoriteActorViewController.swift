@@ -121,6 +121,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         case .Delete:
             actors.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+            NSKeyedArchiver.archiveRootObject(self.actors, toFile: actorsFilePath)
         default:
             break
         }
@@ -134,34 +135,3 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         return url.URLByAppendingPathComponent("actorsArray").path!
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
