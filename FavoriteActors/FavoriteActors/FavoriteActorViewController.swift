@@ -73,7 +73,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         
         if let localImage = actor.image {
             cell.actorImageView.image = localImage
-        } else if actor.imagePath == "" {
+        } else if actor.imagePath == nil || actor.imagePath == "" {
             cell.actorImageView.image = UIImage(named: "personNoImage")
         }
             
@@ -85,7 +85,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             cell.actorImageView.image = UIImage(named: "personPlaceholder")
             
             let size = TheMovieDB.sharedInstance().config.profileSizes[1]
-            let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: actor.imagePath) { (imageData, error) -> Void in
+            let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: actor.imagePath!) { (imageData, error) -> Void in
                 
                 if let data = imageData {
                     dispatch_async(dispatch_get_main_queue()) {

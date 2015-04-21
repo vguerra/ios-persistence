@@ -24,7 +24,7 @@ class Movie : NSManagedObject {
     
     @NSManaged var title: String
     @NSManaged var id: Int
-    @NSManaged var posterPath: String
+    @NSManaged var posterPath: String?
     @NSManaged var releaseDate: NSDate
     
     init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
@@ -36,7 +36,7 @@ class Movie : NSManagedObject {
         // Dictionary
         title = dictionary[Keys.Title] as! String
         id = dictionary[TheMovieDB.Keys.ID] as! Int
-        posterPath = dictionary[Keys.PosterPath] as! String
+        posterPath = dictionary[Keys.PosterPath] as? String
         
         if let releaseDateString = dictionary[Keys.ReleaseDate] as? String {
             releaseDate = TheMovieDB.sharedDateFormatter.dateFromString(releaseDateString)!
@@ -50,7 +50,7 @@ class Movie : NSManagedObject {
         }
         
         set {
-            TheMovieDB.Caches.imageCache.storeImage(newValue, withIdentifier: posterPath)
+            TheMovieDB.Caches.imageCache.storeImage(newValue, withIdentifier: posterPath!)
         }
     }
 }
