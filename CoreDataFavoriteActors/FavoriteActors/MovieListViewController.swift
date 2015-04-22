@@ -151,8 +151,8 @@ class MovieListViewController : UITableViewController {
         case .Delete:
             let movie = actor.movies[indexPath.row]
             
-            // Remove the movie from the array
-            actor.movies.removeAtIndex(indexPath.row)
+            // Remove the movie from the actors array using the inverse relationship
+            movie.actor = nil
             
             // Remove the row from the table
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
