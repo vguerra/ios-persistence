@@ -3,7 +3,7 @@
 //  MyFavoriteMovies
 //
 //  Created by Jason on 1/23/15.
-//  Copyright (c) 2015 Udacity. All rights reserved.
+//  Copyright (c) 2015 CCSF. All rights reserved.
 //
 
 import Foundation
@@ -17,7 +17,7 @@ import Foundation
 */
 
 // MARK: - Files Support
-private let _documentsDirectoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
+private let _documentsDirectoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL
 private let _fileURL: NSURL = _documentsDirectoryURL.URLByAppendingPathComponent("TheMovieDB-Context")
 
 
@@ -105,10 +105,10 @@ class Config: NSObject, NSCoding {
     let DateUpdatedKey = "config.date_update_key"
     
     required init(coder aDecoder: NSCoder) {
-        baseImageURLString = aDecoder.decodeObjectForKey(BaseImageURLStringKey) as! String
-        secureBaseImageURLString = aDecoder.decodeObjectForKey(SecureBaseImageURLStringKey) as! String
-        posterSizes = aDecoder.decodeObjectForKey(PosterSizesKey) as! [String]
-        profileSizes = aDecoder.decodeObjectForKey(ProfileSizesKey) as! [String]
+        baseImageURLString = aDecoder.decodeObjectForKey(BaseImageURLStringKey) as String
+        secureBaseImageURLString = aDecoder.decodeObjectForKey(SecureBaseImageURLStringKey) as String
+        posterSizes = aDecoder.decodeObjectForKey(PosterSizesKey) as [String]
+        profileSizes = aDecoder.decodeObjectForKey(ProfileSizesKey) as [String]
         dateUpdated = aDecoder.decodeObjectForKey(DateUpdatedKey) as? NSDate
     }
     

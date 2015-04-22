@@ -3,7 +3,7 @@
 //  FavoriteActors
 //
 //  Created by Jason on 1/31/15.
-//  Copyright (c) 2015 Udacity. All rights reserved.
+//  Copyright (c) 2015 CCSF. All rights reserved.
 //
 
 import UIKit
@@ -79,7 +79,7 @@ class MovieListViewController : UITableViewController {
         let CellIdentifier = "MovieCell"
         var posterImage = UIImage(named: "posterPlaceHoldr")
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as! TaskCancelingTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as TaskCancelingTableViewCell
         
         cell.textLabel!.text = movie.title
         cell.imageView!.image = nil

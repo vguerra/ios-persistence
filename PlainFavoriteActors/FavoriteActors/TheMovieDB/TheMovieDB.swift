@@ -98,7 +98,7 @@ class TheMovieDB : NSObject {
             
             if let error = error {
                 completionHandler(didSucceed: false, error: error)
-            } else if let newConfig = Config(dictionary: JSONResult as! [String : AnyObject]) {
+            } else if let newConfig = Config(dictionary: JSONResult as [String : AnyObject]) {
                 self.config = newConfig
                 completionHandler(didSucceed: true, error: nil)
             } else {

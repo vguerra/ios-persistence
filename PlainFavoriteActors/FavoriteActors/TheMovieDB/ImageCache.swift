@@ -3,7 +3,7 @@
 //  FavoriteActors
 //
 //  Created by Jason on 1/31/15.
-//  Copyright (c) 2015 Udacity. All rights reserved.
+//  Copyright (c) 2015 CCSF. All rights reserved.
 //
 
 import UIKit
@@ -60,7 +60,7 @@ class ImageCache {
     // MARK: - Helper
     
     func pathForIdentifier(identifier: String) -> String {
-        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
+        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL
         let fullURL = documentsDirectoryURL.URLByAppendingPathComponent(identifier)
         
         return fullURL.path!
