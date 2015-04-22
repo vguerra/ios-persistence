@@ -149,8 +149,17 @@ class MovieListViewController : UITableViewController {
         
         switch (editingStyle) {
         case .Delete:
+            let movie = actor.movies[indexPath.row]
+            
+            // Remove the movie from the array
             actor.movies.removeAtIndex(indexPath.row)
+            
+            // Remove the row from the table
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+            
+            // Remove the movie from the context
+            sharedContext.deleteObject(movie)
+            CoreDataStackManager.sharedInstance().saveContext()
         default:
             break
         }

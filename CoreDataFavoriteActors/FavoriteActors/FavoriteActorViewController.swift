@@ -173,9 +173,17 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         
         switch (editingStyle) {
         case .Delete:
+            let actor = actors[indexPath.row]
+            
+            // Remove the actor from the array
             actors.removeAtIndex(indexPath.row)
+            
+            // Remove the row from the table
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-        default:
+            
+            // Remove the actor from the context
+            sharedContext.deleteObject(actor)
+            CoreDataStackManager.sharedInstance().saveContext()        default:
             break
         }
     }
