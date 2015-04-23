@@ -31,7 +31,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     // Mark: - Actions
     
     func addActor() {
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ActorPickerViewController") as ActorPickerViewController
+        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ActorPickerViewController") as! ActorPickerViewController
         
         controller.delegate = self
         
@@ -73,7 +73,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         let actor = actors[indexPath.row]
         let CellIdentifier = "ActorCell"
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as ActorTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as! ActorTableViewCell
         
         cell.nameLabel!.text = actor.name
         cell.frameImageView.image = UIImage(named: "personFrame")
@@ -111,7 +111,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let controller = storyboard!.instantiateViewControllerWithIdentifier("MovieListViewController") as MovieListViewController
+        let controller = storyboard!.instantiateViewControllerWithIdentifier("MovieListViewController") as! MovieListViewController
         
         controller.actor = actors[indexPath.row]
         
@@ -133,7 +133,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     
     var actorArrayURL: NSURL {
         let filename = "favoriteActorsArray"
-        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL
+        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
         
         return documentsDirectoryURL.URLByAppendingPathComponent(filename)
     }

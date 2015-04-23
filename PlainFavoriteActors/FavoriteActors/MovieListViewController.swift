@@ -79,7 +79,7 @@ class MovieListViewController : UITableViewController {
         let CellIdentifier = "MovieCell"
         var posterImage = UIImage(named: "posterPlaceHoldr")
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as TaskCancelingTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as! TaskCancelingTableViewCell
         
         cell.textLabel!.text = movie.title
         cell.imageView!.image = nil
