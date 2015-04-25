@@ -24,7 +24,7 @@ class Movie : NSManagedObject {
     }
     
     @NSManaged var title: String
-    @NSManaged var id: Int32
+    @NSManaged var id: Int
     @NSManaged var posterPath: String?
     @NSManaged var releaseDate: NSDate
     @NSManaged var actor: Person

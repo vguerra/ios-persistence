@@ -26,7 +26,7 @@ class Person : NSManagedObject {
     }
     
     @NSManaged var name: String
-    @NSManaged var id: Int32
+    @NSManaged var id: Int
     @NSManaged var imagePath: String?
     @NSManaged var movies: [Movie]?
     
