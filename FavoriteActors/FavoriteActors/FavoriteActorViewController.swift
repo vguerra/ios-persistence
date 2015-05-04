@@ -19,14 +19,14 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
 
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addActor")
-
-        // Unarchive the graph when the list is first shown
-        self.actors = NSKeyedUnarchiver.unarchiveObjectWithFile(actorsFilePath) as? [Person] ?? [Person]()
     }
     
     override func viewWillAppear(animated: Bool) {
-        // Archive the graph any time this list of actors is displayed.
-        NSKeyedArchiver.archiveRootObject(self.actors, toFile: actorsFilePath)
+        super.viewWillAppear(animated)
+        
+        // This method is invoked whenever the view appears, including when
+        // it appears after the actor picker is dismissed. That makes it a 
+        // good contender for saving the array
     }
     
     // Mark: - Actions
@@ -52,7 +52,7 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
                 }
             }
             
-            // If we didn't find any, then add
+            // If we didn't find any, then add (and maybe save the array?)
             self.actors.append(newActor)
             
             // And reload the table
@@ -121,17 +121,8 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         case .Delete:
             actors.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-            NSKeyedArchiver.archiveRootObject(self.actors, toFile: actorsFilePath)
         default:
             break
         }
-    }
-    
-    // MARK: - Saving the array. Helper.
-    
-    var actorsFilePath : String {
-        let manager = NSFileManager.defaultManager()
-        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
-        return url.URLByAppendingPathComponent("actorsArray").path!
     }
 }

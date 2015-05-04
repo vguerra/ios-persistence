@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>8F1D3CDF-7263-4B8E-A0A1-4FB28A743ED0</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>FavoriteActors</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>CD28FA6A2CFC634512324DD7C91B7993C5276BCE</key>
 		<string>https://github.com/udacity/ios-persistence</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>FavoriteActors/FavoriteActors.xcodeproj/project.xcworkspace</string>
+	<string>FavoriteActors/FavoriteActors.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>CD28FA6A2CFC634512324DD7C91B7993C5276BCE</key>
