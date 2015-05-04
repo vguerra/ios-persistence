@@ -86,6 +86,6 @@ class PlaySoundsViewController: UIViewController {
     
     @IBAction func sliderDidMove(sender: UISlider) {
         // Do nothing?
-        println("Slider vaue: \(sliderView.value)")
+        println("Slider value: \(sliderView.value)")
     }
 }
