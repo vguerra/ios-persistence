@@ -25,9 +25,21 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+
         // Archive the graph any time this list of actors is displayed.
         NSKeyedArchiver.archiveRootObject(self.actors, toFile: actorsFilePath)
     }
+
+    
+    // MARK: - Saving the array. Helper.
+    
+    var actorsFilePath : String {
+        let manager = NSFileManager.defaultManager()
+        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
+        return url.URLByAppendingPathComponent("actorsArray").path!
+    }
+
     
     // Mark: - Actions
     
@@ -125,13 +137,5 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         default:
             break
         }
-    }
-    
-    // MARK: - Saving the array. Helper.
-    
-    var actorsFilePath : String {
-        let manager = NSFileManager.defaultManager()
-        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
-        return url.URLByAppendingPathComponent("actorsArray").path!
     }
 }
