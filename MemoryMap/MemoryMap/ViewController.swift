@@ -13,6 +13,10 @@ import MapKit
  *  This View Controller displays a map. If the user changes
  *  the map region (the center and the zoom level), then the 
  *  app persists the change. How does it work? 
+ *  
+ *  (In order to include the MapKit classes, the app needs to be
+ *   congifured. Click on the "MemoryMap" icon in the navigator, 
+ *   then the "Capabilities" tab. Notice that "Maps" is turned on)
  */
 
 class ViewController: UIViewController {
@@ -62,7 +66,7 @@ class ViewController: UIViewController {
             let center = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
             
             let longitudeDelta = regionDictionary["latitudeDelta"] as! CLLocationDegrees
-            let latitudeDelta = regionDictionary["latitudeDelta"] as! CLLocationDegrees
+            let latitudeDelta = regionDictionary["longitudeDelta"] as! CLLocationDegrees
             let span = MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
             
             let savedRegion = MKCoordinateRegion(center: center, span: span)
