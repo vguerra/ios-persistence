@@ -26,7 +26,7 @@ class MovieListViewController : UITableViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if actor.movies == nil || actor.movies!.isEmpty {
+        if actor.movies.isEmpty {
             
             let resource = TheMovieDB.Resources.PersonIDMovieCredits
             var parameters = [TheMovieDB.Keys.ID : Int(actor.id)]
@@ -71,7 +71,7 @@ class MovieListViewController : UITableViewController {
     // MARK: - Table View
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return actor.movies?.count ?? 0
+        return actor.movies.count
     }
     
     /**
@@ -80,7 +80,7 @@ class MovieListViewController : UITableViewController {
     */
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let movie = actor.movies![indexPath.row]
+        let movie = actor.movies[indexPath.row]
         let CellIdentifier = "MovieCell"
         var posterImage = UIImage(named: "posterPlaceHoldr")
         
@@ -141,9 +141,16 @@ class MovieListViewController : UITableViewController {
         
         switch (editingStyle) {
         case .Delete:
-            actor.movies!.removeAtIndex(indexPath.row)
+            let movie = actor.movies[indexPath.row]
+            
+            // Remove the movie from the actors array using the inverse relationship
+            movie.actor = nil
+            
+            // Remove the row from the table
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-        default:
+            
+            // Remove the movie from the context
+            sharedContext.deleteObject(movie)        default:
             break
         }
     }
