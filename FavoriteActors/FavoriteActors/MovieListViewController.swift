@@ -26,7 +26,7 @@ class MovieListViewController : UITableViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if actor.movies == nil || actor.movies!.isEmpty {
+        if actor.movies.isEmpty {
             
             let resource = TheMovieDB.Resources.PersonIDMovieCredits
             var parameters = [TheMovieDB.Keys.ID : actor.id]
@@ -72,16 +72,15 @@ class MovieListViewController : UITableViewController {
     // MARK: - Table View
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return actor.movies?.count ?? 0
+        return actor.movies.count
     }
-    
-    /**
+        /**
     The downloading of movie posters is handled here. Notice how the method uses a unique
     table view cell that holds on to a task so that it can be canceled.
     */
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let movie = actor.movies![indexPath.row]
+        let movie = actor.movies[indexPath.row]
         let CellIdentifier = "MovieCell"
         var posterImage = UIImage(named: "posterPlaceHoldr")
         
@@ -104,7 +103,7 @@ class MovieListViewController : UITableViewController {
             let size = TheMovieDB.sharedInstance().config.posterSizes[1]
             
             // Start the task that will eventually download the image
-            let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: movie.posterPath) { data, error in
+            let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: movie.posterPath!) { data, error in
                 
                 if let error = error {
                     println("Poster download error: \(error.localizedDescription)")
@@ -142,7 +141,7 @@ class MovieListViewController : UITableViewController {
         
         switch (editingStyle) {
         case .Delete:
-            actor.movies!.removeAtIndex(indexPath.row)
+            actor.movies.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         default:
             break
