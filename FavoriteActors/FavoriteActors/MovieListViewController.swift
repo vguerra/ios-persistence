@@ -26,7 +26,7 @@ class MovieListViewController : UITableViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if actor.movies == nil || actor.movies!.isEmpty {
+        if actor.movies.count == 0 {
             
             let resource = TheMovieDB.Resources.PersonIDMovieCredits
             var parameters = [TheMovieDB.Keys.ID : actor.id]
@@ -81,7 +81,7 @@ class MovieListViewController : UITableViewController {
     // MARK: - Table View
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return actor.movies?.count ?? 0
+        return actor.movies.count
     }
     
     /**
@@ -90,7 +90,7 @@ class MovieListViewController : UITableViewController {
     */
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let movie = actor.movies![indexPath.row]
+        let movie = actor.movies[indexPath.row]
         let CellIdentifier = "MovieCell"
         var posterImage = UIImage(named: "posterPlaceHoldr")
         
@@ -101,7 +101,7 @@ class MovieListViewController : UITableViewController {
         
         // Set the Movie Poster Image
         
-        if movie.posterImage == "" {
+        if movie.posterPath == nil || movie.posterPath == "" {
             posterImage = UIImage(named: "noImage")
         } else if movie.posterImage != nil {
             posterImage = movie.posterImage
@@ -113,7 +113,7 @@ class MovieListViewController : UITableViewController {
             let size = TheMovieDB.sharedInstance().config.posterSizes[1]
             
             // Start the task that will eventually download the image
-            let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: movie.posterPath) { data, error in
+            let task = TheMovieDB.sharedInstance().taskForImageWithSize(size, filePath: movie.posterPath!) { data, error in
                 
                 if let error = error {
                     println("Poster download error: \(error.localizedDescription)")
@@ -151,7 +151,7 @@ class MovieListViewController : UITableViewController {
         
         switch (editingStyle) {
         case .Delete:
-            actor.movies!.removeAtIndex(indexPath.row)
+            actor.movies.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         default:
             break
