@@ -36,7 +36,7 @@ class Person : NSManagedObject {
     
     // 4. We are promoting these four from simple properties, to Core Data attributes
     @NSManaged var name: String
-    @NSManaged var id: Int
+    @NSManaged var id: NSNumber
     @NSManaged var imagePath: String?
     @NSManaged var movies: [Movie]
     

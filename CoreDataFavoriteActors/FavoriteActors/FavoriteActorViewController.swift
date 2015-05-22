@@ -251,7 +251,7 @@ class FavoriteActorViewController : UITableViewController, NSFetchedResultsContr
         
         if let localImage = actor.image {
             cell.actorImageView.image = localImage
-        } else if actor.imagePath == "" {
+        } else if actor.imagePath == nil || actor.imagePath == "" {
             cell.actorImageView.image = UIImage(named: "personNoImage")
         }
             
