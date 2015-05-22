@@ -12,7 +12,7 @@ import UIKit
  *
  * 1. import Core Data
  * 2. include the strange statement @objc(Person). This makes Person visible to Core Data code
- * 3. Make Person a subclass of NSManagedObject
+ * 3. Make Person a subclass of NSManagedObject, and make id an NSNumber instead of an Int
  * 4. Add @NSManaged in front of each of the properties/attributes
  * 5. Include the standard Core Data init method, which inserts the object into a context
  * 6. Write an init method that takes a dictionary and a context. This the biggest chagne to the class
@@ -36,7 +36,7 @@ class Person : NSManagedObject {
     
     // 4. We are promoting these four from simple properties, to Core Data attributes
     @NSManaged var name: String
-    @NSManaged var id: Int
+    @NSManaged var id: NSNumber
     @NSManaged var imagePath: String?
     @NSManaged var movies: [Movie]
     
