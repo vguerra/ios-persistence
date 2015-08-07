@@ -21,12 +21,23 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if NSFileManager.defaultManager().fileExistsAtPath(audioFileURL().path!) {
+            shouldSegueToSoundPlayer = true
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
         //Hide the stop button
         stopButton.hidden = true
         recordButton.enabled = true
+        
+        if shouldSegueToSoundPlayer {
+            shouldSegueToSoundPlayer = false
+            let path = audioFileURL()
+            recordedAudio = RecordedAudio(filePathUrl: path, title: path.pathExtension)
+            self.performSegueWithIdentifier("stopRecording", sender: self)
+        }
     }
 
     @IBAction func recordAudio(sender: UIButton) {
