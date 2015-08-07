@@ -12,6 +12,12 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     
     var actors = [Person]()
     
+    var actorsFilePath : String {
+        let manager = NSFileManager.defaultManager()
+        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
+        return url.URLByAppendingPathComponent("actorsArray").path!
+    }
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -19,6 +25,10 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
 
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addActor")
+    
+        if let actors = NSKeyedUnarchiver.unarchiveObjectWithFile(actorsFilePath) as? [Person] {
+            self.actors = actors
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -54,9 +64,12 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             
             // If we didn't find any, then add (and maybe save the array?)
             self.actors.append(newActor)
+            println("saving a new actor")
             
             // And reload the table
             self.tableView.reloadData()
+            
+            NSKeyedArchiver.archiveRootObject(self.actors, toFile: actorsFilePath)
         }
     }
     

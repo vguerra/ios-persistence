@@ -129,6 +129,7 @@ class MovieListViewController : UITableViewController {
         
         switch (editingStyle) {
         case .Delete:
+            println("removing movie")
             actor.movies.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         default:
