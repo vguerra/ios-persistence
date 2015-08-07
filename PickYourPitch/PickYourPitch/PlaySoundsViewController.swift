@@ -33,6 +33,8 @@ class PlaySoundsViewController: UIViewController {
         audioFile = AVAudioFile(forReading: receivedAudio.filePathUrl, error: nil)
         
         setUserInterfaceToPlayMode(false)
+        
+        sliderView.value = NSUserDefaults.standardUserDefaults().floatForKey(SliderValueKey)
     }
     
     func setUserInterfaceToPlayMode(isPlayMode: Bool) {
@@ -42,6 +44,8 @@ class PlaySoundsViewController: UIViewController {
     }
 
     @IBAction func playAudio(sender: UIButton) {
+
+        NSUserDefaults.standardUserDefaults().setFloat(sliderView.value, forKey: SliderValueKey)
         
         // Get the pitch from the slider
         let pitch = sliderView.value
