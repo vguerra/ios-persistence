@@ -15,11 +15,17 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     
     // MARK: - Life Cycle
     
+    var sharedContext: NSManagedObjectContext {
+        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return delegate.managedObjectContext!
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addActor")
+    
     }
     
     override func viewWillAppear(animated: Bool) {
