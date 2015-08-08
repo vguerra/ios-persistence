@@ -89,7 +89,20 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
                 if a.id == newActor.id {
                     return
                 }
-            }            
+            }
+            
+            var dictionary = [String : AnyObject]()
+            dictionary[Person.Keys.ID] = newActor.id
+            dictionary[Person.Keys.Name] = newActor.name
+            
+            if let imagePath = newActor.imagePath {
+                dictionary[Person.Keys.ProfilePath] = imagePath
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                let actorToBeAdded = Person(dictionary: dictionary, context: self.sharedContext)
+                self.actors.append(actorToBeAdded)
+            }
         }
     }
     
