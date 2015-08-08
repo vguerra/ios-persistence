@@ -37,16 +37,27 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
         // Step 3: initialize the events array with the results of the fetchAllEvents() method
         // (see the initialization of the "actors" array in FavoreActorViewController for an example
+        events = fetchAllEvents()
     }
 
     func insertNewObject(sender: AnyObject) {
-
-        // Step 4: Create an Event object (and append it to the events array.)
-        // (see the actorPicker(:didPickActor:) method for an example with the Person object
-
-        // Step 5: Save the context (and check for an error)
-        // (see the actorPicker(:didPickActor:) method for an example
         
+        dispatch_async(dispatch_get_main_queue()) {
+            // Step 4: Create an Event object (and append it to the events array.)
+            // (see the actorPicker(:didPickActor:) method for an example with the Person object
+            let eventToBeAdded = Event(context: self.sharedContext)
+            self.events.append(eventToBeAdded)
+            
+            // Step 5: Save the context (and check for an error)
+            // (see the actorPicker(:didPickActor:) method for an example
+            var error: NSError? = nil
+            self.sharedContext.save(&error)
+            
+            if let error = error {
+                println("Error saving context: \(error.localizedDescription)")
+            }
+            
+        }
         tableView.reloadData()
     }
 
@@ -94,8 +105,24 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     // Step 1: Add a "sharedContext" convenience property.
     // (See the FavoriteActorViewController for an example)
-
+    var sharedContext : NSManagedObjectContext {
+        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return delegate.managedObjectContext!
+    }
+    
     // Step 2: Add a fetchAllEvents() method
     // (See the fetchAllActors() method in FavoriteActorViewController for an example
+    func fetchAllEvents() -> [Event] {
+        let error: NSErrorPointer  = nil
+        
+        let fetchRequest = NSFetchRequest(entityName: "Event")
+        let results = sharedContext.executeFetchRequest(fetchRequest, error: error)
+        
+        if error != nil {
+            println("Error in fetchAllEvents(): \(error)")
+        }
+        
+        return results as! [Event]
+    }
 }
 
