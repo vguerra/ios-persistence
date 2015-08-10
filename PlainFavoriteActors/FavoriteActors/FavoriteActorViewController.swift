@@ -13,6 +13,10 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
     
     var actors = [Person]()
     
+    var sharedContext : NSManagedObjectContext {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -20,6 +24,20 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
         
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addActor")
+        
+        actors = fetchAllActors()
+        println("actors count: \(actors.count)")
+    }
+    
+    func fetchAllActors() -> [Person] {
+        let error: NSErrorPointer = nil
+        let fetchRequest = NSFetchRequest(entityName: "Person")
+        let results = sharedContext.executeFetchRequest(fetchRequest, error: error)
+        if error != nil {
+            println("Error in fetchAllACtors: \(error)")
+        }
+        println("fetching all actors \(results!.count)")
+        return results as! [Person]
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -58,8 +76,16 @@ class FavoriteActorViewController : UITableViewController, ActorPickerViewContro
             // Here we add the actor object that comes from the ActorPickerViewController. Remember
             // that we cannot do this directly once we incoporate Core Data. The ActorPickerViewController
             // uses a "scratch" context. It fills its table with actors that have not been picked. We 
-            // need to create a new person object that is inserted into the shared context. 
-            self.actors.append(newActor)
+            var dictionary = [String : AnyObject]()
+            
+            dictionary[Person.Keys.ID] = newActor.id
+            dictionary[Person.Keys.Name] = newActor.name
+            dictionary[Person.Keys.ProfilePath] = newActor.imagePath
+            
+            // Then init, using the shared Context
+            let actorToBeAdded = Person(dictionary: dictionary, context: sharedContext)
+            self.actors.append(actorToBeAdded)
+            CoreDataStackManager.sharedInstance().saveContext()
         }
     }
     

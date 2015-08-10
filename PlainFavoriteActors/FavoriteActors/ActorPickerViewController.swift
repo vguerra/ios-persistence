@@ -89,7 +89,7 @@ class ActorPickerViewController: UIViewController, UITableViewDelegate, UITableV
                 // Create an array of Person instances from the JSON dictionaries
                 // If we change this so that it inserts into a context, which context should it be? 
                 self.actors = actorDictionaries.map() {
-                    Person(dictionary: $0)
+                    Person(dictionary: $0, context: self.scratchContext)
                 }
                 
                 // Reload the table on the main thread
@@ -103,6 +103,18 @@ class ActorPickerViewController: UIViewController, UITableViewDelegate, UITableV
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
+    
+    // MARK: Core Data Convenience
+    
+    lazy var sharedContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }()
+    
+    lazy var scratchContext: NSManagedObjectContext = {
+        var context = NSManagedObjectContext()
+        context.persistentStoreCoordinator =  CoreDataStackManager.sharedInstance().persistentStoreCoordinator
+        return context
+        }()
     
     // MARK: - Table View Delegate and Data Source
     

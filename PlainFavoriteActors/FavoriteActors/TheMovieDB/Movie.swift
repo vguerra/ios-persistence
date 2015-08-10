@@ -8,7 +8,9 @@
 import UIKit
 import CoreData
 
-class Movie {
+@objc(Movie)
+
+class Movie : NSManagedObject{
 
     struct Keys {
         static let Title = "title"
@@ -16,13 +18,20 @@ class Movie {
         static let ReleaseDate = "release_date"
     }
 
-    var title: String
-    var id: Int
-    var posterPath: String?
-    var releaseDate: NSDate?
+    @NSManaged var title: String
+    @NSManaged var id: NSNumber
+    @NSManaged var posterPath: String?
+    @NSManaged var releaseDate: NSDate?
+    @NSManaged var actor: Person?
 
-    init(dictionary: [String : AnyObject]) {
-        // Dictionary
+    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    }
+    
+    init(dictionary : [String : AnyObject], context: NSManagedObjectContext) {
+        let entity = NSEntityDescription.entityForName("Movie", inManagedObjectContext: context)!
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        
         title = dictionary[Keys.Title] as! String
         id = dictionary[TheMovieDB.Keys.ID] as! Int
         posterPath = dictionary[Keys.PosterPath] as? String
@@ -32,7 +41,7 @@ class Movie {
             }
         }
     }
-
+    
     var posterImage: UIImage? {
         get { return TheMovieDB.Caches.imageCache.imageWithIdentifier(posterPath) }
         set { TheMovieDB.Caches.imageCache.storeImage(newValue, withIdentifier: posterPath!) }

@@ -40,11 +40,11 @@ class MovieListViewController : UITableViewController {
                         
                         // Parse the array of movies dictionaries
                         var movies = moviesDictionaries.map() { (dictionary: [String : AnyObject]) -> Movie in
-                            let movie = Movie(dictionary: dictionary)
+                            let movie = Movie(dictionary: dictionary, context: self.sharedContext)
                             
                             // We associate this movie with it's actor by appending it to the array
                             // In core data we use the relationship. We set the movie's actor property
-                            self.actor.movies.append(movie)
+                            movie.actor = self.actor
                             
                             return movie
                         }
@@ -61,6 +61,11 @@ class MovieListViewController : UITableViewController {
             }
         }
     }
+    
+    // MARK: Core Data convenience methods
+    lazy var sharedContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }()
     
     
     // MARK: - Table View
